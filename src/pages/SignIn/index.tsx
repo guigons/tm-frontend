@@ -17,7 +17,7 @@ import Button from '../../components/Button';
 
 import { Container, Content, AnimationContainer, Background } from './styles';
 
-interface SignInForData {
+interface ISignInForData {
   email: string;
   password: string;
 }
@@ -30,7 +30,7 @@ const SignIn: React.FC = () => {
   const { addToast } = useToast();
 
   const handleSubmit = useCallback(
-    async (data: SignInForData) => {
+    async (data: ISignInForData) => {
       try {
         formRef.current?.setErrors({});
 
@@ -47,7 +47,7 @@ const SignIn: React.FC = () => {
 
         await signIn({ email: data.email, password: data.password });
 
-        history.push('/home');
+        history.push('/home/dashboard');
       } catch (err) {
         console.log(err);
         if (err instanceof Yup.ValidationError) {
@@ -86,7 +86,7 @@ const SignIn: React.FC = () => {
               placeholder="Senha"
             />
             <Button type="submit">Entrar</Button>
-            <Link to="/">Esqueci minha senha</Link>
+            <Link to="/forgot-password">Esqueci minha senha</Link>
           </Form>
         </AnimationContainer>
       </Content>

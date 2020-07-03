@@ -5,17 +5,20 @@ interface IContainerProps {
 }
 
 export const Container = styled.div<IContainerProps>`
-  width: 64px;
-  background-color: #dedede29;
-  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background-color: #8080802e;
+  border-radius: 50px;
+  font-size: 14px;
+  color: #fff;
   cursor: pointer;
-  font-weight: 400;
-  font-size: 16px;
-  color: rgb(27, 29, 35);
   ${props =>
     !!props.value &&
     css`
       background-color: #e6a2a2;
-      color: #fff;
+      font-weight: 500;
     `};
 `;

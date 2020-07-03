@@ -9,14 +9,19 @@ export default createGlobalStyle`
   }
 
   body {
-    background: #312E38;
+    background: #24292e;
     color: #FFF;
     font-family: 'Roboto Slab',  sans-serif;
     text-rendering: optimizeLegibility !important;
     -webkit-font-smoothing: antialiased !important;
   }
 
-  body, input, button {
+  html, body, #root {
+    height: 100%;
+  }
+
+  body, input, select, button {
+    font-family: 'Roboto Slab',  sans-serif;
     font-size: 16px;
   }
 
@@ -26,6 +31,10 @@ export default createGlobalStyle`
 
   button {
     cursor: pointer;
+  }
+
+  ul {
+    list-style: none;
   }
 
 

@@ -12,13 +12,21 @@ import { useField } from '@unform/core';
 import { Container, Error } from './styles';
 
 interface IInputProps extends InputHTMLAttributes<HTMLInputElement> {
+  label?: string;
   name: string;
+  focused?: boolean;
   icon?: React.ComponentType<IconBaseProps>;
 }
 
-const Input: React.FC<IInputProps> = ({ name, icon: Icon, ...rest }) => {
+const Input: React.FC<IInputProps> = ({
+  name,
+  label,
+  icon: Icon,
+  focused,
+  ...rest
+}) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [isFocused, setIsFocused] = useState(false);
+  const [isFocused, setIsFocused] = useState(focused || false);
   const [isFilled, setisFilled] = useState(false);
   const { fieldName, defaultValue, error, registerField } = useField(name);
 
@@ -40,15 +48,25 @@ const Input: React.FC<IInputProps> = ({ name, icon: Icon, ...rest }) => {
   }, [fieldName, registerField]);
 
   return (
-    <Container isErrored={!!error} isFilled={isFilled} isFocused={isFocused}>
+    <Container
+      isErrored={!!error}
+      isFilled={isFilled}
+      isFocused={isFocused}
+      label={label}
+    >
       {Icon && <Icon size={20} />}
-      <input
-        onFocus={handleInputFocus}
-        onBlur={handleInputBlur}
-        defaultValue={defaultValue}
-        ref={inputRef}
-        {...rest}
-      />
+      <label htmlFor={name}>
+        {label ? `${label}:` : null}
+        <input
+          id={name}
+          onFocus={handleInputFocus}
+          onBlur={handleInputBlur}
+          defaultValue={defaultValue}
+          ref={inputRef}
+          {...rest}
+        />
+      </label>
+
       {error && (
         <Error title={error}>
           <FiAlertCircle color="#c53030" size={20} />

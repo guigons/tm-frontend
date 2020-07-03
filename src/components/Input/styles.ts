@@ -1,20 +1,22 @@
 import styled, { css } from 'styled-components';
 import Tooltip from '../Tooltip';
 
-interface ContainerProps {
+interface IContainerProps {
   isFocused: boolean;
   isFilled: boolean;
   isErrored: boolean;
+  label?: string;
 }
 
-export const Container = styled.div<ContainerProps>`
+export const Container = styled.div<IContainerProps>`
   background: #232129;
   border-radius: 10px;
   padding: 16px;
   width: 100%;
 
   border: 2px solid #232120;
-  color: #f4ede8;
+  color: grey;
+  font-weight: 300;
 
   display: flex;
   align-items: center;
@@ -42,14 +44,24 @@ export const Container = styled.div<ContainerProps>`
       color: #19b2ff;
     `}
 
-  input {
-    background: transparent;
+  > label {
+    display: flex;
     flex: 1;
-    border: 0;
-    color: #f4ede8;
+    input {
+      background: transparent;
+      flex: 1;
+      border: 0;
+      color: #f4ede8;
 
-    &::placeholder {
-      color: #666360;
+      ${props =>
+        props.label &&
+        css`
+          margin-left: 16px;
+        `}
+
+      &::placeholder {
+        color: #666360;
+      }
     }
   }
 

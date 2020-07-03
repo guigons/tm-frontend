@@ -1,51 +1,37 @@
 import React from 'react';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
-import {
-  FiLogOut,
-  FiUser,
-  FiBox,
-  FiAlertCircle,
-  FiActivity,
-  FiLayers,
-} from 'react-icons/fi';
-import TabsContainer from '../../components/TabsContainer';
-import Tab from '../../components/TabsContainer/Tab';
+import { FiActivity } from 'react-icons/fi';
+import Dashboard from '../Dashboard';
 import TAs from '../TAs';
 import TPs from '../TPs';
 
-import { Container, SubHeader } from './styles';
+import { Container, Content, NavContent } from './styles';
 
-import { useAuth } from '../../hooks/auth';
+import Header from '../../components/Header';
+import SideMenu from '../../components/SideMenu';
+import ItemSideMenu from '../../components/SideMenu/ItemSideMenu';
 
 const Home: React.FC = () => {
-  const { signOut } = useAuth();
   const match = useRouteMatch();
-
   return (
     <Container>
-      <header>
-        <FiBox size={30} />
-        <h1>Ticket Manager</h1>
-        <button type="button" onClick={signOut}>
-          <FiLogOut size={20} />
-        </button>
-        <button type="button">
-          <FiUser size={20} />
-        </button>
-      </header>
-
-      {/* <SubHeader />
-      <TabsContainer>
-        <Tab route="/home/tas" name="TAs" icon={FiAlertCircle} />
-        <Tab route="/home/tps" name="TPs" icon={FiLayers} />
-        <Tab route="/home" name="Dasboard" icon={FiActivity} />
-      </TabsContainer>
-
-      <Switch>
-        <Route path={`${match.path}/tas`} component={TAs} />
-        <Route path={`${match.path}/tps`} component={TPs} />
-      </Switch> */}
-      {/* <footer>Desenvolvido por: Gerencia Suporte e Configuração IP</footer> */}
+      <Header />
+      <Content>
+        <SideMenu>
+          <ItemSideMenu route={`${match.path}/dashboard`}>
+            <FiActivity size={18} />
+          </ItemSideMenu>
+          <ItemSideMenu route={`${match.path}/tas`}>TAs</ItemSideMenu>
+          <ItemSideMenu route={`${match.path}/tps`}>TPs</ItemSideMenu>
+        </SideMenu>
+        <NavContent>
+          <Switch>
+            <Route path={`${match.path}/dashboard`} component={Dashboard} />
+            <Route path={`${match.path}/tas`} component={TAs} />
+            <Route path={`${match.path}/tps`} component={TPs} />
+          </Switch>
+        </NavContent>
+      </Content>
     </Container>
   );
 };
