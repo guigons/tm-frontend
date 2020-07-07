@@ -24,6 +24,8 @@ export interface IChartPreference {
   name: string;
   start: Date;
   end: Date;
+  period: string;
+  amount?: number;
   horizontal: string;
   stacked: boolean;
   type: string;

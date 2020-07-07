@@ -21,6 +21,7 @@ export const Container = styled.div<IContainerProps>`
   display: flex;
   align-items: center;
 
+
   & + div {
     margin-top: 8px;
   }
@@ -51,7 +52,15 @@ export const Container = styled.div<IContainerProps>`
       background: transparent;
       flex: 1;
       border: 0;
-      color: #f4ede8;
+      color: #f4ede8 !important;
+
+      icon {
+        color: red;
+      }
+
+      svg {
+        color: red !important;
+      }
 
       ${props =>
         props.label &&

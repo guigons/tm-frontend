@@ -1,8 +1,7 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react';
-import { FiSettings, FiPlus, FiMoreVertical } from 'react-icons/fi';
+import { FiSettings, FiPlus } from 'react-icons/fi';
 import { MdDelete, MdFullscreen, MdFullscreenExit } from 'react-icons/md';
-
-import { subDays } from 'date-fns';
+import { subDays, format } from 'date-fns';
 import * as Yup from 'yup';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
@@ -26,7 +25,6 @@ import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Select from '../../components/Select';
 import getValidationErrors from '../../utils/getValidationErrors';
-import { useToast } from '../../hooks/toast';
 
 export interface ITemplatesFilterCondition {
   key: string;
@@ -51,6 +49,8 @@ interface IFormData {
   template_id: string;
   horizontal: string;
   groupBy: string;
+  period: string;
+  amount: number;
 }
 
 interface IOption {
@@ -63,6 +63,8 @@ interface IAddChartPreference {
   template_id: string;
   horizontal: string;
   groupBy?: string;
+  period: string;
+  amount?: number;
 }
 
 const Dashboard: React.FC = () => {
@@ -104,7 +106,14 @@ const Dashboard: React.FC = () => {
   }, []);
 
   const handleAddPreferenceChart = useCallback(
-    ({ template_id, name, horizontal, groupBy }: IAddChartPreference) => {
+    ({
+      template_id,
+      name,
+      horizontal,
+      groupBy,
+      period,
+      amount,
+    }: IAddChartPreference) => {
       const now = new Date();
 
       updateChartsPreference([
@@ -115,9 +124,11 @@ const Dashboard: React.FC = () => {
           name,
           type: 'bar',
           start: subDays(now, 30),
+          end: now,
+          period,
+          amount,
           horizontal,
           stacked: true,
-          end: now,
           groupBy,
         },
       ]);
@@ -150,9 +161,40 @@ const Dashboard: React.FC = () => {
     return `Por ${groupBy}`;
   }, []);
 
+  const handlePeriodLabel = useCallback((chartPreference: IChartPreference) => {
+    if (!chartPreference.period) return '';
+    if (chartPreference.period === 'specific') {
+      const start_label = format(new Date(chartPreference.start), 'dd/MMM');
+      const end_label = format(new Date(chartPreference.end), 'dd/MMM');
+      return `${start_label} - ${end_label}`;
+    }
+
+    if (chartPreference.period === 'last_days') {
+      return `${
+        chartPreference.amount && chartPreference.amount > 1
+          ? `Últimos ${chartPreference.amount} dias`
+          : 'Último dia'
+      }`;
+    }
+    if (chartPreference.period === 'last_weeks') {
+      return `${
+        chartPreference.amount && chartPreference.amount > 1
+          ? `Últimas ${chartPreference.amount} semanas`
+          : 'Última semana'
+      }`;
+    }
+    if (chartPreference.period === 'last_months') {
+      return `${
+        chartPreference.amount && chartPreference.amount > 1
+          ? `Últimos ${chartPreference.amount} meses`
+          : 'Último mês'
+      }`;
+    }
+  }, []);
+
   const handleSubmitAdd = useCallback(
     async (data: IFormData) => {
-      const { name, template_id, horizontal, groupBy } = data;
+      const { name, template_id, horizontal, groupBy, period, amount } = data;
       try {
         formRef.current?.setErrors({});
         const schema = Yup.object().shape({
@@ -162,7 +204,14 @@ const Dashboard: React.FC = () => {
           abortEarly: false,
         });
 
-        handleAddPreferenceChart({ name, template_id, horizontal, groupBy });
+        handleAddPreferenceChart({
+          name,
+          template_id,
+          horizontal,
+          groupBy,
+          period,
+          amount,
+        });
         modalNewChartRef.current?.close();
       } catch (err) {
         console.log(err);
@@ -177,7 +226,7 @@ const Dashboard: React.FC = () => {
 
   const handleSubmitEdit = useCallback(
     async (data: IFormData) => {
-      const { name, template_id, horizontal, groupBy } = data;
+      const { name, template_id, horizontal, groupBy, period, amount } = data;
       try {
         formRef.current?.setErrors({});
         const schema = Yup.object().shape({
@@ -195,6 +244,8 @@ const Dashboard: React.FC = () => {
               template_id,
               horizontal,
               groupBy,
+              period,
+              amount,
             };
           }
           return pc;
@@ -236,7 +287,7 @@ const Dashboard: React.FC = () => {
             type="button"
             onClick={() => modalMeusTemplatesRef.current?.open()}
           >
-            <FiSettings size={18} />
+            {/* <FiSettings size={18} /> */}
           </button>
         </Header>
         <Main>
@@ -245,6 +296,10 @@ const Dashboard: React.FC = () => {
               <ChartPreference key={chartPreference._id}>
                 <h1>{chartPreference.name}</h1>
                 <span>{handleGroupByLabel(chartPreference.groupBy)}</span>
+
+                <div className="Period">
+                  {handlePeriodLabel(chartPreference)}
+                </div>
 
                 <div className="Icons">
                   <MdFullscreen
@@ -255,8 +310,8 @@ const Dashboard: React.FC = () => {
                     size={18}
                     onClick={() => handleRemoveChart(chartPreference)}
                   />
-                  <FiMoreVertical
-                    size={18}
+                  <FiSettings
+                    size={14}
                     onClick={() => handleEditChart(chartPreference)}
                   />
                 </div>
@@ -280,7 +335,11 @@ const Dashboard: React.FC = () => {
       <Modal ref={modalNewChartRef}>
         <ModalNewChartPreference>
           <h1>Novo Gráfico</h1>
-          <Form ref={formRef} onSubmit={handleSubmitAdd}>
+          <Form
+            ref={formRef}
+            onSubmit={handleSubmitAdd}
+            initialData={{ amount: 7 }}
+          >
             <Input
               name="name"
               label="Nome"
@@ -308,6 +367,31 @@ const Dashboard: React.FC = () => {
                 </option>
               ))}
             </Select>
+            <Select name="period" label="Período">
+              <option value="last_days">Últimos Dias</option>
+              <option value="last_weeks">Últimas Semanas</option>
+              <option value="last_months">Últimos Meses</option>
+              {/* <option value="specific">Específico</option> */}
+            </Select>
+            <Input
+              name="amount"
+              label="Qtde"
+              type="number"
+              placeholder="Digite uma quantidade ..."
+              min={1}
+            />
+            {/* <Input
+              name="start"
+              label="Inicio"
+              type="date"
+              placeholder="Data Início ..."
+            />
+            <Input
+              name="end"
+              label="Término"
+              type="date"
+              placeholder="Data Término ..."
+            /> */}
             <Button type="submit">Salvar</Button>
           </Form>
         </ModalNewChartPreference>
@@ -347,6 +431,31 @@ const Dashboard: React.FC = () => {
                 </option>
               ))}
             </Select>
+            <Select name="period" label="Período">
+              <option value="last_days">Últimos Dias</option>
+              <option value="last_weeks">Últimas Semanas</option>
+              <option value="last_months">Últimos Meses</option>
+              {/* <option value="specific">Específico</option> */}
+            </Select>
+            <Input
+              name="amount"
+              label="Qtde"
+              type="number"
+              placeholder="Digite uma quantidade ..."
+              min={1}
+            />
+            {/* <Input
+              name="start"
+              label="Inicio"
+              type="date"
+              placeholder="Data Início ..."
+            />
+            <Input
+              name="end"
+              label="Término"
+              type="date"
+              placeholder="Data Término ..."
+            /> */}
             <Button type="submit">Salvar</Button>
           </Form>
         </ModalEditChartPreference>
@@ -372,8 +481,8 @@ const Dashboard: React.FC = () => {
                 size={20}
                 onClick={() => modalChartRef.current?.close()}
               />
-              <FiMoreVertical
-                size={18}
+              <FiSettings
+                size={14}
                 onClick={() => handleEditChart(selectedChart)}
               />
             </div>

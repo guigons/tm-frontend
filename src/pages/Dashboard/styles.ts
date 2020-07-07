@@ -66,6 +66,18 @@ export const ChartPreference = styled.div`
   flex-direction: column;
   border-radius: 4px;
 
+  > div.Period {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 300;
+  }
+
   > div.Icons {
     display: flex;
     align-items: center;
