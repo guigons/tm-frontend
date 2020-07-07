@@ -6,7 +6,8 @@ import React, {
   useCallback,
   useMemo,
 } from 'react';
-import { FormHandles, Form } from '@unform/core';
+import { FormHandles } from '@unform/core';
+import { Form } from '@unform/web';
 import { FiSearch, FiPlus } from 'react-icons/fi';
 
 import { Container } from './styles';
