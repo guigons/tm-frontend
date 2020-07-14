@@ -4,7 +4,7 @@ interface IContainerProps {
   value: string | number;
 }
 
-export const Container = styled.div<IContainerProps>`
+export const Container = styled.button<IContainerProps>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -15,10 +15,14 @@ export const Container = styled.div<IContainerProps>`
   font-size: 14px;
   color: #fff;
   cursor: pointer;
+  border: 0px;
+  font-weight: 300;
+  color: #ffffff33;
   ${props =>
     !!props.value &&
     css`
-      background-color: #e6a2a2;
+      background-color: #e6a2a288;
+      color: white;
       font-weight: 500;
     `};
 `;

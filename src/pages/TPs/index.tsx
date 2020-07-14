@@ -16,14 +16,15 @@ import Modal, { IModalHandles } from '../../components/Modal';
 import MinhasFilasTP from './components/MinhasFilasTP';
 import Spinner from '../../components/Spinner';
 import { useToast } from '../../hooks/toast';
+import TPsSummary from './components/TPsSummary';
 
-interface ITPGroupItem {
+export interface ITPGroupItem {
   time: string;
   count: number;
   ids: number[];
 }
 
-interface ITPGroup {
+export interface ITPGroup {
   grupoResponsavel: string;
   data: ITPGroupItem[] | [];
   total: number;
@@ -33,7 +34,10 @@ interface ITPGroup {
   foraDoPrazo: number;
   preBaixa: number;
   cancelados: number;
-  devolvidos: number;
+  devolvidos: {
+    count: number;
+    ids: number[];
+  };
   flexibilizados: number;
   naoExecutados: number;
   fechados: {
@@ -56,16 +60,34 @@ interface IResponseSigitmGrupos {
   foraDoPrazo: number;
   preBaixa: number;
   cancelados: number;
-  devolvidos: number;
-  flexibilizados: number;
+  devolvidos: {
+    count: number;
+    ids: number[];
+  };
+  flexibilizados: {
+    count: number;
+    ids: [];
+  };
   naoExecutados: number;
   fechados: {
-    executados: number;
+    executados: {
+      count: number;
+      ids: [];
+    };
     cancelados: number;
-    rollback: number;
-    parcial: number;
+    rollback: {
+      count: number;
+      ids: [];
+    };
+    parcial: {
+      count: number;
+      ids: [];
+    };
     naoExecutado: number;
-    incidencia: number;
+    incidencia: {
+      count: number;
+      ids: [];
+    };
     naoClassificado: number;
     total: number;
   };
@@ -82,22 +104,42 @@ const TPs: React.FC = () => {
     foraDoPrazo: 0,
     preBaixa: 0,
     cancelados: 0,
-    devolvidos: 0,
-    flexibilizados: 0,
+    devolvidos: {
+      count: 0,
+      ids: [],
+    },
+    flexibilizados: {
+      count: 0,
+      ids: [],
+    },
     naoExecutados: 0,
     fechados: {
-      executados: 0,
+      executados: {
+        count: 0,
+        ids: [],
+      },
       cancelados: 0,
-      rollback: 0,
-      parcial: 0,
+      rollback: {
+        count: 0,
+        ids: [],
+      },
+      parcial: {
+        count: 0,
+        ids: [],
+      },
       naoExecutado: 0,
-      incidencia: 0,
+      incidencia: {
+        count: 0,
+        ids: [],
+      },
       naoClassificado: 0,
       total: 0,
     },
   });
-
-  const modalRef = useRef<IModalHandles>();
+  const [summaryIds, setSummaryIds] = useState<number[]>();
+  const [summaryTitle, setSummaryTitle] = useState<string>();
+  const modalMinhasFilas = useRef<IModalHandles>();
+  const modalTPsSummary = useRef<IModalHandles>();
 
   const { preferences } = usePreferences();
 
@@ -124,6 +166,15 @@ const TPs: React.FC = () => {
     handleLoadGroups();
   }, [handleLoadGroups]);
 
+  const handleOpenSummary = useCallback(
+    (sumTitle: string, sumIds: number[]) => {
+      setSummaryTitle(sumTitle);
+      setSummaryIds(sumIds);
+      modalTPsSummary.current?.open();
+    },
+    [],
+  );
+
   useEffect(() => {
     handleLoadGroups();
   }, [handleLoadGroups, preferences.filas_tps]);
@@ -137,13 +188,20 @@ const TPs: React.FC = () => {
             <button type="button" onClick={handleRefresh}>
               <FiRefreshCcw size={18} />
             </button>
-            <button type="button" onClick={() => modalRef.current?.open()}>
+            <button
+              type="button"
+              onClick={() => modalMinhasFilas.current?.open()}
+            >
               <FiFilter size={18} />
             </button>
           </div>
         </Header>
         <Cards>
-          <Card>
+          <Card
+            onClick={() =>
+              handleOpenSummary('Devolvidos', TPGroups.devolvidos.ids)
+            }
+          >
             {loading ? (
               <Spinner />
             ) : (
@@ -153,35 +211,11 @@ const TPs: React.FC = () => {
                 </div>
                 <div>
                   <strong>
-                    {TPGroups.devolvidos}
-                    {TPGroups.total ? (
-                      <span>
-                        {((TPGroups.devolvidos * 100) / TPGroups.total).toFixed(
-                          0,
-                        )}
-                        %
-                      </span>
-                    ) : null}
-                  </strong>
-                </div>
-              </>
-            )}
-          </Card>
-          <Card>
-            {loading ? (
-              <Spinner />
-            ) : (
-              <>
-                <div>
-                  <span>Flexibilizadas</span>
-                </div>
-                <div>
-                  <strong>
-                    {TPGroups.flexibilizados}
+                    {TPGroups.devolvidos.count}
                     {TPGroups.total ? (
                       <span>
                         {(
-                          (TPGroups.flexibilizados * 100) /
+                          (TPGroups.devolvidos.count * 100) /
                           TPGroups.total
                         ).toFixed(0)}
                         %
@@ -192,7 +226,40 @@ const TPs: React.FC = () => {
               </>
             )}
           </Card>
-          <Card>
+          <Card
+            onClick={() =>
+              handleOpenSummary('Flexibilizados', TPGroups.flexibilizados.ids)
+            }
+          >
+            {loading ? (
+              <Spinner />
+            ) : (
+              <>
+                <div>
+                  <span>Flexibilizadas</span>
+                </div>
+                <div>
+                  <strong>
+                    {TPGroups.flexibilizados.count}
+                    {TPGroups.total ? (
+                      <span>
+                        {(
+                          (TPGroups.flexibilizados.count * 100) /
+                          TPGroups.total
+                        ).toFixed(0)}
+                        %
+                      </span>
+                    ) : null}
+                  </strong>
+                </div>
+              </>
+            )}
+          </Card>
+          <Card
+            onClick={() =>
+              handleOpenSummary('Executadas', TPGroups.fechados.executados.ids)
+            }
+          >
             {loading ? (
               <Spinner />
             ) : (
@@ -202,11 +269,11 @@ const TPs: React.FC = () => {
                 </div>
                 <div>
                   <strong>
-                    {TPGroups.fechados.executados}
+                    {TPGroups.fechados.executados.count}
                     {TPGroups.total ? (
                       <span>
                         {(
-                          (TPGroups.fechados.executados * 100) /
+                          (TPGroups.fechados.executados.count * 100) /
                           TPGroups.fechados.total
                         ).toFixed(0)}
                         %
@@ -217,7 +284,14 @@ const TPs: React.FC = () => {
               </>
             )}
           </Card>
-          <Card>
+          <Card
+            onClick={() =>
+              handleOpenSummary(
+                'Fechamentos Parciais',
+                TPGroups.fechados.parcial.ids,
+              )
+            }
+          >
             {loading ? (
               <Spinner />
             ) : (
@@ -227,11 +301,11 @@ const TPs: React.FC = () => {
                 </div>
                 <div>
                   <strong>
-                    {TPGroups.fechados.parcial}
+                    {TPGroups.fechados.parcial.count}
                     {TPGroups.total ? (
                       <span>
                         {(
-                          (TPGroups.fechados.parcial * 100) /
+                          (TPGroups.fechados.parcial.count * 100) /
                           TPGroups.fechados.total
                         ).toFixed(0)}
                         %
@@ -242,7 +316,14 @@ const TPs: React.FC = () => {
               </>
             )}
           </Card>
-          <Card>
+          <Card
+            onClick={() =>
+              handleOpenSummary(
+                'Fechamentos Com Rollback',
+                TPGroups.fechados.rollback.ids,
+              )
+            }
+          >
             {loading ? (
               <Spinner />
             ) : (
@@ -252,11 +333,11 @@ const TPs: React.FC = () => {
                 </div>
                 <div>
                   <strong>
-                    {TPGroups.fechados.rollback}
+                    {TPGroups.fechados.rollback.count}
                     {TPGroups.total ? (
                       <span>
                         {(
-                          (TPGroups.fechados.rollback * 100) /
+                          (TPGroups.fechados.rollback.count * 100) /
                           TPGroups.fechados.total
                         ).toFixed(0)}
                         %
@@ -267,7 +348,14 @@ const TPs: React.FC = () => {
               </>
             )}
           </Card>
-          <Card>
+          <Card
+            onClick={() =>
+              handleOpenSummary(
+                'Fechamentos com Incidências',
+                TPGroups.fechados.incidencia.ids,
+              )
+            }
+          >
             {loading ? (
               <Spinner />
             ) : (
@@ -277,11 +365,11 @@ const TPs: React.FC = () => {
                 </div>
                 <div>
                   <strong>
-                    {TPGroups.fechados.incidencia}
+                    {TPGroups.fechados.incidencia.count}
                     {TPGroups.total ? (
                       <span>
                         {(
-                          (TPGroups.fechados.incidencia * 100) /
+                          (TPGroups.fechados.incidencia.count * 100) /
                           TPGroups.fechados.total
                         ).toFixed(0)}
                         %
@@ -315,28 +403,68 @@ const TPs: React.FC = () => {
                   <p>{TPG.grupoResponsavel}</p>
                   <ul>
                     <li>
-                      <Badge value={TPG.data[0].count} />
+                      <Badge
+                        value={TPG.data[0].count}
+                        onClick={() =>
+                          handleOpenSummary('Em Aprovação', TPG.data[0].ids)
+                        }
+                      />
                     </li>
                     <li>
-                      <Badge value={TPG.data[1].count} />
+                      <Badge
+                        value={TPG.data[1].count}
+                        onClick={() =>
+                          handleOpenSummary('Autorizado', TPG.data[1].ids)
+                        }
+                      />
                     </li>
                     <li>
-                      <Badge value={TPG.data[2].count} />
+                      <Badge
+                        value={TPG.data[2].count}
+                        onClick={() =>
+                          handleOpenSummary('Em Execução', TPG.data[2].ids)
+                        }
+                      />
                     </li>
                     <li>
-                      <Badge value={TPG.data[3].count} />
+                      <Badge
+                        value={TPG.data[3].count}
+                        onClick={() =>
+                          handleOpenSummary('Fora do Prazo', TPG.data[3].ids)
+                        }
+                      />
                     </li>
                     <li>
-                      <Badge value={TPG.data[4].count} />
+                      <Badge
+                        value={TPG.data[4].count}
+                        onClick={() =>
+                          handleOpenSummary('Pré-baixa', TPG.data[4].ids)
+                        }
+                      />
                     </li>
                     <li>
-                      <Badge value={TPG.data[5].count} />
+                      <Badge
+                        value={TPG.data[5].count}
+                        onClick={() =>
+                          handleOpenSummary('Cancelado', TPG.data[5].ids)
+                        }
+                      />
                     </li>
                     <li>
-                      <Badge value={TPG.data[6].count} />
+                      <Badge
+                        value={TPG.data[6].count}
+                        onClick={() =>
+                          handleOpenSummary('Fechado', TPG.data[6].ids)
+                        }
+                      />
                     </li>
                     <li>
-                      <Badge value={TPG.data[7].count} />
+                      <Badge
+                        value={TPG.data[7].count}
+                        onClick={() =>
+                          handleOpenSummary('Não Executado', TPG.data[7].ids)
+                        }
+                      />
                     </li>
                   </ul>
                   <span>
@@ -351,8 +479,14 @@ const TPs: React.FC = () => {
         ) : null}
       </Container>
 
-      <Modal ref={modalRef}>
+      <Modal ref={modalMinhasFilas}>
         <MinhasFilasTP />
+      </Modal>
+
+      <Modal ref={modalTPsSummary} size="lg">
+        {summaryIds && summaryTitle ? (
+          <TPsSummary summaryIds={summaryIds} summaryTitle={summaryTitle} />
+        ) : null}
       </Modal>
     </>
   );

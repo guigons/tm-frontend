@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { ButtonHTMLAttributes } from 'react';
 
 import { Container } from './styles';
 
-interface IBadgeProps {
-  value: string | number;
+type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+  loading?: boolean;
   color?: string;
-}
+  value: string | number;
+};
 
-const Button: React.FC<IBadgeProps> = ({ value }) => (
-  <Container value={value}>{value}</Container>
+const Button: React.FC<ButtonProps> = ({ loading, color, value, ...rest }) => (
+  <Container className="Badge" type="button" value={value} {...rest}>
+    {value}
+  </Container>
 );
 export default Button;

@@ -64,6 +64,7 @@ export const FilaHeader = styled.ul`
   align-items: center;
   justify-content: space-between;
   padding: 0px 16px;
+  margin: 24px 8px 0px 8px;
   border-radius: 0px 5px 5px 0px;
   position: relative;
   font-size: 12px;

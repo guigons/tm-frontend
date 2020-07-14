@@ -42,6 +42,12 @@ export const Card = styled.div`
   flex: 1;
   padding: 16px;
   border-radius: 5px;
+  cursor: pointer;
+  position: relative;
+
+  &:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 1);
+  }
 
   & + div {
     margin-left: 10px;
@@ -79,7 +85,7 @@ export const FilaHeader = styled.ul`
   align-items: center;
   justify-content: space-between;
   padding: 0px 16px;
-  margin: 0px 8px;
+  margin: 24px 8px 0px 8px;
   border-radius: 0px 5px 5px 0px;
   position: relative;
   font-size: 12px;

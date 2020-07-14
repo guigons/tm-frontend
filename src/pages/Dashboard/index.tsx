@@ -190,6 +190,7 @@ const Dashboard: React.FC = () => {
           : 'Último mês'
       }`;
     }
+    return '';
   }, []);
 
   const handleSubmitAdd = useCallback(
@@ -236,31 +237,30 @@ const Dashboard: React.FC = () => {
           abortEarly: false,
         });
 
+        const newSelectedChart: IChartPreference = {
+          _id: selectedChart?._id as string,
+          name,
+          template_id,
+          horizontal,
+          groupBy,
+          period,
+          amount,
+          start: selectedChart?.start as Date,
+          end: selectedChart?.end as Date,
+          stacked: selectedChart?.stacked as boolean,
+          type: selectedChart?.type as string,
+        };
+
         const newChartPreferences = preferences.charts.map(pc => {
           if (selectedChart && pc._id === selectedChart._id) {
-            return {
-              ...pc,
-              name,
-              template_id,
-              horizontal,
-              groupBy,
-              period,
-              amount,
-            };
+            return newSelectedChart;
           }
           return pc;
         });
 
         updateChartsPreference(newChartPreferences);
-        setSelectedChart(oldSelectedChart => {
-          return {
-            ...(oldSelectedChart as IChartPreference),
-            name,
-            template_id,
-            horizontal,
-            groupBy,
-          };
-        });
+        setSelectedChart(newSelectedChart);
+
         modalEditChartRef.current?.close();
       } catch (err) {
         console.log(err);

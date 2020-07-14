@@ -5,6 +5,10 @@ export const Container = styled.div`
   flex-direction: column;
   flex: 1;
 
+  > h1 {
+    margin-bottom: 16px;
+  }
+
   > div {
     display: flex;
     flex-direction: row;
