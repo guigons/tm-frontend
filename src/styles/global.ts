@@ -37,5 +37,13 @@ export default createGlobalStyle`
     list-style: none;
   }
 
+  :root {
+    --color-background: #24292e;
+    --color-box: #312e38;
+    --color-primary: #19b2ff;
+    --color-secondary: #f16262;
+    --color-text: #FFFFFF;
+    --color-text-secondary: grey;
+  }
 
 `;

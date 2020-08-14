@@ -6,13 +6,14 @@ import { Container } from './styles';
 interface IChipProps {
   text: string;
   close?(): void;
+  withoutClose?: boolean;
 }
 
-const Chip: React.FC<IChipProps> = ({ text, close }) => {
+const Chip: React.FC<IChipProps> = ({ text, close, withoutClose }) => {
   return (
-    <Container>
+    <Container className="Chip">
       {text}
-      <FiX onClick={close} />
+      {!withoutClose && <FiX onClick={close} />}
     </Container>
   );
 };

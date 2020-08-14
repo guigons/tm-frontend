@@ -1,106 +1,71 @@
-import React, { useState, useEffect, memo } from 'react';
-import { Bar, Line } from 'react-chartjs-2';
-import { ChartData, ChartOptions } from 'chart.js';
-
+import React, { useRef, useEffect, useCallback, useState, memo } from 'react';
+import { Chart as ChartCanvas, ChartData } from 'chart.js';
 import { Container } from './styles';
-import { IChartPreference } from '../../hooks/preferences';
-import api from '../../services/api';
-import Spinner from '../Spinner';
 
-interface IChartProps {
-  chartPreference: IChartPreference;
-  width?: number;
-  height?: number;
-  maxGroupColumns?: number;
+export interface IChartProps {
+  chartData?: ChartData;
+  animation?: boolean;
 }
 
-const Chart: React.FC<IChartProps> = ({
-  chartPreference,
-  width,
-  height,
-  maxGroupColumns,
-}) => {
-  const options: ChartOptions = {
-    maintainAspectRatio: false,
-    legend: {
-      position: 'top',
-      display: false,
-    },
-    scales: {
-      xAxes: [
-        {
-          stacked: chartPreference.stacked,
-        },
-      ],
-      yAxes: [
-        {
-          stacked: chartPreference.stacked,
+const Chart: React.FC<IChartProps> = ({ chartData, animation }) => {
+  const ref = useRef<HTMLCanvasElement>(null);
+  const [chart, setChart] = useState<Chart>();
 
-          ticks: {
-            beginAtZero: true,
+  const createChart = useCallback(current => {
+    const ctx = current.getContext('2d');
+    if (ctx) {
+      const chartCreated = new ChartCanvas(ctx, {
+        type: 'bar',
+        data: {
+          labels: [],
+          datasets: [],
+        },
+        options: {
+          animation: {
+            duration: animation ? 0 : 1000,
+          },
+          maintainAspectRatio: false,
+          legend: {
+            position: 'top',
+            display: false,
+          },
+          scales: {
+            xAxes: [
+              {
+                stacked: true,
+              },
+            ],
+            yAxes: [
+              {
+                stacked: true,
+
+                ticks: {
+                  beginAtZero: true,
+                },
+              },
+            ],
           },
         },
-      ],
-    },
-  };
-
-  const [chartData, setChartData] = useState<ChartData>({
-    labels: [],
-    datasets: [],
-  });
-  const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(false);
+      });
+      setChart(chartCreated);
+    }
+  }, []);
 
   useEffect(() => {
-    async function loadChartConfig(): Promise<void> {
-      setLoading(true);
-      try {
-        const response = await api.get<ChartData>(`/charts`, {
-          params: {
-            template_id: chartPreference.template_id,
-            chartPreference_id: chartPreference._id,
-            maxGroupColumns,
-          },
-        });
-        setChartData(oldChartData => {
-          return {
-            ...oldChartData,
-            labels: response.data.labels,
-            datasets: response.data.datasets,
-          };
-        });
-      } catch {
-        setError(true);
-      } finally {
-        setLoading(false);
-      }
+    if (ref.current) {
+      createChart(ref.current);
     }
-    loadChartConfig();
-  }, [chartPreference, maxGroupColumns]);
+  }, [createChart]);
 
-  return (
-    <Container>
-      {error ? (
-        <h1>Error ao processar gráfico ...</h1>
-      ) : loading ? (
-        <Spinner />
-      ) : chartPreference.type === 'line' ? (
-        <Line
-          data={chartData}
-          width={width || 200}
-          height={height || 100}
-          options={options}
-        />
-      ) : (
-        <Bar
-          data={chartData}
-          width={width || 4}
-          height={height || 100}
-          options={options}
-        />
-      )}
-    </Container>
-  );
+  useEffect(() => {
+    if (chart && chartData) {
+      chart.data.labels = chartData.labels;
+      chart.data.datasets = chartData.datasets;
+      chart.update();
+    }
+  }, [chart, chartData]);
+
+  return <Container ref={ref} />;
 };
 
 export default memo(Chart);

@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components';
+import { shade } from 'polished';
 import Tooltip from '../Tooltip';
 
 interface IContainerProps {
@@ -6,24 +7,33 @@ interface IContainerProps {
   isFilled: boolean;
   isErrored: boolean;
   label?: string;
+  disabled?: boolean;
+}
+
+interface IContentOptionsProps {
+  showDisplay: boolean;
 }
 
 export const Container = styled.div<IContainerProps>`
   background: #232129;
   border-radius: 10px;
-  padding: 16px;
   width: 100%;
+  position: relative;
 
   border: 2px solid #232120;
   color: grey;
   font-weight: 300;
-
+  /* padding: 0px 16px; */
+  padding-right: 16px;
   display: flex;
   align-items: center;
+  justify-content: flex-start;
 
-  & + div {
-    margin-top: 8px;
-  }
+  /* ${props =>
+    props.isFilled &&
+    css`
+      color: #19b2ff;
+    `} */
 
   ${props =>
     props.isErrored &&
@@ -36,18 +46,33 @@ export const Container = styled.div<IContainerProps>`
     css`
       color: #19b2ff;
       border-color: #19b2ff;
+      border-radius: 10px 10px 0px 0px;
+      /* border-bottom: 0px; */
     `}
 
   ${props =>
-    props.isFilled &&
+    props.disabled &&
     css`
-      color: #19b2ff;
+      background: ${shade(0.03, '#FFF')};
     `}
 
   label {
     display: flex;
     flex: 1;
+    align-items: center;
+    padding: 0px 0px 0px 16px;
+    justify-content: center;
+    margin-right: 0px;
 
+    span {
+      color: #f4ede8;
+      font-weight: 400;
+      ${props =>
+        props.label &&
+        css`
+          margin-left: 16px;
+        `}
+    }
 
     select {
       display: flex;
@@ -55,6 +80,10 @@ export const Container = styled.div<IContainerProps>`
       border: 0;
       color: #f4ede8;
       background: transparent;
+      padding: 16px;
+      -moz-appearance:none; /* Firefox */
+      -webkit-appearance:none; /* Safari and Chrome */
+      appearance:none;
 
       ${props =>
         props.label &&
@@ -68,9 +97,6 @@ export const Container = styled.div<IContainerProps>`
     }
   }
 
-  svg {
-    margin-right: 10px;
-  }
 `;
 
 export const Error = styled(Tooltip)`
@@ -88,4 +114,50 @@ export const Error = styled(Tooltip)`
       border-color: #c53030 transparent;
     }
   }
+`;
+
+export const Options = styled.div`
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 100%;
+  left: -2px;
+  width: calc(100% + 4px);
+  background: #232129;
+  z-index: 51;
+  max-height: 200px;
+  overflow-y: auto;
+  border-radius: 0px 0px 10px 10px;
+  border-left: 2px solid #19b2ff;
+  border-right: 2px solid #19b2ff;
+  border-bottom: 2px solid #19b2ff;
+`;
+
+export const Backdrop = styled.div`
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+`;
+
+export const ContentOptions = styled.div<IContentOptionsProps>`
+  ${props =>
+    props.showDisplay
+      ? css`
+          display: flex;
+        `
+      : css`
+          display: none;
+        `};
+`;
+
+export const Label = styled.h1`
+  text-align: left;
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0px;
+  color: #8dabc4;
+  margin-bottom: 10px;
 `;

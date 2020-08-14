@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 import { ObjectID } from 'mongodb';
 import api from '../services/api';
+import { useFetch } from './fetch';
 
 export interface IFilaTAPreference {
   filaId: number;
@@ -73,7 +74,8 @@ export const PreferencesProvider: React.FC = ({ children }) => {
         delete preferencesLoaded.user_id;
         setPreferences(preferencesLoaded);
       } catch (error) {
-        throw new Error('Erro ao carregar preferencias');
+        // throw new Error('Erro ao carregar preferencias');
+        console.log('Error, try load preferences', error);
       }
     }
     loadPreferences();

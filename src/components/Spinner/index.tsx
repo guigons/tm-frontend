@@ -4,14 +4,14 @@ import { ClipLoader } from 'react-spinners';
 
 import { Container } from './styles';
 
-const override = css`
-  display: flex;
-`;
+interface ISpinnerProps {
+  size?: number;
+}
 
-const Spinner: React.FC = () => {
+const Spinner: React.FC<ISpinnerProps> = ({ size }) => {
   return (
-    <Container className="sweet-loading">
-      <ClipLoader css={override} color="#19b2ff" loading />
+    <Container>
+      <ClipLoader color="#19b2ff" loading size={size || 36} />
     </Container>
   );
 };

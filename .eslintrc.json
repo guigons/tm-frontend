@@ -27,6 +27,7 @@
     "prettier/prettier": "error",
     "react/jsx-one-expression-per-line": "off",
     "react/jsx-props-no-spreading": "off",
+    "react/jsx-curly-newline": "off",
     "react/prop-types": "off",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
@@ -36,6 +37,7 @@
     "react/jsx-filename-extension": [1, { "extensions": [".tsx"] }],
     "import/prefer-default-export": "off",
     "@typescript-eslint/camelcase": "off",
+    "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/interface-name-prefix": [
       "error",
       { "prefixWithI": "always" }

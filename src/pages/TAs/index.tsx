@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { FiFilter, FiRefreshCcw } from 'react-icons/fi';
+import { format } from 'date-fns';
 import {
   Container,
   Header,
@@ -9,13 +10,14 @@ import {
   Fila,
   Card,
 } from './styles';
+import Chip from '../../components/Chip';
 import Badge from '../../components/Badge';
 import Spinner from '../../components/Spinner';
-import api from '../../services/api';
 import { usePreferences } from '../../hooks/preferences';
 import Modal, { IModalHandles } from '../../components/Modal';
 import MinhasFilasTA from './components/MinhasFilasTA';
 import { useToast } from '../../hooks/toast';
+import { useFetch } from '../../hooks/fetch';
 
 interface ITAGroupItem {
   time: string;
@@ -41,63 +43,56 @@ interface IResponseSigitmGrupos {
 }
 
 const TAs: React.FC = () => {
-  const [TAGroups, setTAGroups] = useState<IResponseSigitmGrupos>({
-    groups: [],
-    total: 0,
-    abertos: 0,
-    tratamento: 0,
-    afetacao: 0,
+  const { data: TAGroups, isValidating, revalidate } = useFetch<
+    IResponseSigitmGrupos
+  >('/tas/group', {
+    refreshInterval: 60000 * 5,
+    revalidateOnFocus: true,
+    errorRetryCount: 3,
+    errorRetryInterval: 3000,
   });
-  const [loading, setLoading] = useState(true);
 
-  const modalRef = useRef<IModalHandles>();
+  const modalMinhasFilas = useRef<IModalHandles>();
 
   const { preferences } = usePreferences();
 
   const { addToast } = useToast();
 
-  const handleLoadGroups = useCallback(async () => {
-    setLoading(true);
-    try {
-      const response = await api.get<IResponseSigitmGrupos>('/tas/group');
-      setTAGroups(response.data);
-    } catch (error) {
-      console.log(error);
-      addToast({
-        type: 'error',
-        title: 'Erro na Bridge',
-        description: 'Falha de comunicação com a base do SIGITM',
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  const handleRefresh = useCallback(async () => {
-    handleLoadGroups();
-  }, [handleLoadGroups]);
-
   useEffect(() => {
-    handleLoadGroups();
-  }, [handleLoadGroups, preferences.filas_tas]);
+    revalidate();
+  }, [preferences.filas_tas, revalidate]);
 
   return (
     <>
       <Container>
         <Header>
-          <h1>Visão Geral</h1>
-          <div className="Icons">
-            <button type="button" onClick={handleRefresh}>
+          <div className="BarLeft">
+            <h1>Visão Geral</h1>
+          </div>
+          <div className="BarRight">
+            {isValidating ? (
+              <Chip text="Atualizando ..." withoutClose />
+            ) : (
+              <Chip
+                text={`Atualizado em ${format(new Date(), 'dd/MMM HH:mm')}`}
+                withoutClose
+              />
+            )}
+            {/* <Chip text="Últimos 7 dias" withoutClose /> */}
+            <button type="button" onClick={revalidate}>
               <FiRefreshCcw size={18} />
             </button>
-            <button type="button" onClick={() => modalRef.current?.open()}>
+            <button
+              type="button"
+              onClick={() => modalMinhasFilas.current?.open()}
+            >
               <FiFilter size={18} />
             </button>
           </div>
         </Header>
         <Cards>
           <Card>
-            {loading ? (
+            {!TAGroups ? (
               <Spinner />
             ) : (
               <>
@@ -107,7 +102,7 @@ const TAs: React.FC = () => {
             )}
           </Card>
           <Card>
-            {loading ? (
+            {!TAGroups ? (
               <Spinner />
             ) : (
               <>
@@ -117,7 +112,7 @@ const TAs: React.FC = () => {
             )}
           </Card>
           <Card>
-            {loading ? (
+            {!TAGroups ? (
               <Spinner />
             ) : (
               <>
@@ -127,7 +122,7 @@ const TAs: React.FC = () => {
             )}
           </Card>
           <Card>
-            {loading ? (
+            {!TAGroups ? (
               <Spinner />
             ) : (
               <>
@@ -154,7 +149,7 @@ const TAs: React.FC = () => {
 
           <span>Total</span>
         </FilaHeader>
-        {!loading ? (
+        {TAGroups ? (
           <Filas>
             {TAGroups.groups.length ? (
               TAGroups.groups.map(TAG => (
@@ -198,13 +193,25 @@ const TAs: React.FC = () => {
                 </Fila>
               ))
             ) : (
-              <h3>Nenhuma preferência definida ...</h3>
+              <h3>
+                * Nenhma preferência definida.
+                <p>
+                  Clique{' '}
+                  <button
+                    type="button"
+                    onClick={() => modalMinhasFilas.current?.open()}
+                  >
+                    aqui
+                  </button>{' '}
+                  para selecionar suas filas.
+                </p>
+              </h3>
             )}
           </Filas>
         ) : null}
       </Container>
 
-      <Modal ref={modalRef}>
+      <Modal ref={modalMinhasFilas}>
         <MinhasFilasTA />
       </Modal>
     </>

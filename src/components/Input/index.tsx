@@ -53,6 +53,7 @@ const Input: React.FC<IInputProps> = ({
       isFilled={isFilled}
       isFocused={isFocused}
       label={label}
+      className="Input"
     >
       {Icon && <Icon size={20} />}
       <label htmlFor={name}>

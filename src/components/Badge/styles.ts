@@ -21,7 +21,7 @@ export const Container = styled.button<IContainerProps>`
   ${props =>
     !!props.value &&
     css`
-      background-color: #e6a2a288;
+      background-color: var(--color-secondary);
       color: white;
       font-weight: 500;
     `};

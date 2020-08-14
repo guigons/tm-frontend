@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { shade } from 'polished';
 
 export const Container = styled.div`
   display: flex;
@@ -15,16 +16,89 @@ export const Header = styled.div`
   min-height: 80px;
   padding: 0px 8px;
 
-  > h1 {
-    font-size: 16px;
-    padding: 16px 0px;
+  div.Select {
+    width: 140px;
+    font-size: 12px;
+    background-color: var(--color-box);
+    /* padding: 5px 16px; */
+    border-radius: 25px;
+    border: 0px;
+    label {
+      padding: 0px;
+      span {
+        color: var(--color-secondary);
+      }
+    }
+    select {
+      margin: 0px;
+      padding: 0px;
+    }
+    div.ContentOptions {
+      background: transparent;
+      margin-top: 6px;
+    }
+    button.Option {
+      color: var(--color-secondary);
+      font-size: 12px;
+      padding: 8px 16px;
+      margin: 1px 0px;
+      border-radius: 25px;
+      background: #232129;
+
+      &:hover {
+        background: ${shade(0.2, '#232129')};
+      }
+    }
   }
 
-  > div.Icons > button {
-    border: 0px;
-    background-color: inherit;
-    color: inherit;
-    margin-left: 16px;
+  > div.BarLeft {
+    display: flex;
+    align-items: center;
+    h1 {
+      font-size: 16px;
+      padding: 16px 0px;
+    }
+  }
+
+  > div.BarRight {
+    display: flex;
+    button {
+      border: 0px;
+      background-color: inherit;
+      color: inherit;
+      margin-left: 16px;
+    }
+    span.Chip:nth-child(1) {
+      background-color: var(--color-box);
+      color: var(--color-primary);
+      font-size: 12px;
+      font-weight: 400;
+      margin-left: 16px;
+    }
+
+    div.Period {
+      display: flex;
+      background-color: var(--color-box);
+      border-radius: 25px;
+      align-items: center;
+      justify-content: center;
+      margin-left: 16px;
+      cursor: pointer;
+      padding: 0px;
+      width: 150px;
+
+      h1 {
+        color: var(--color-secondary);
+        font-size: 12px;
+        font-weight: 400;
+        margin-left: 16px;
+      }
+
+      svg {
+        color: var(--color-secondary);
+        margin: 0px 8px;
+      }
+    }
   }
 `;
 
@@ -134,6 +208,15 @@ export const Filas = styled.ul`
     margin-top: 36px;
     color: grey;
     font-weight: 300;
+    font-size: 16px;
+
+    button {
+      background: transparent;
+      border: 0px;
+      color: var(--color-primary);
+      font-size: 16px;
+      font-weight: 400;
+    }
   }
 `;
 
@@ -205,5 +288,36 @@ export const Fila = styled.li`
     width: 40px;
     height: 24px;
     margin-left: 20px;
+  }
+`;
+
+export const OptionsContainer = styled.div`
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 10px 16px;
+    background-color: var(--color-box);
+    border: 0px;
+    border-radius: 4px;
+    cursor: pointer;
+
+    h1 {
+      text-align: left;
+      font-size: 15px;
+      font-weight: 400;
+      letter-spacing: 0px;
+      color: var(--color-text);
+      width: 120px;
+    }
+
+    svg {
+      color: var(--color-text);
+      margin: 8px 24px 8px 8px;
+    }
+
+    &:hover {
+      background-color: ${shade(0.2, '#312e38')};
+    }
   }
 `;

@@ -11,8 +11,9 @@ interface IContainerProps {
 export const Container = styled.div<IContainerProps>`
   background: #232129;
   border-radius: 10px;
-  padding: 16px;
+  padding: 0px 16px;
   width: 100%;
+  height: 56px;
 
   border: 2px solid #232120;
   color: grey;
@@ -21,10 +22,6 @@ export const Container = styled.div<IContainerProps>`
   display: flex;
   align-items: center;
 
-
-  & + div {
-    margin-top: 8px;
-  }
 
   ${props =>
     props.isErrored &&
@@ -39,11 +36,11 @@ export const Container = styled.div<IContainerProps>`
       border-color: #19b2ff;
     `}
 
-  ${props =>
+  /* ${props =>
     props.isFilled &&
     css`
       color: #19b2ff;
-    `}
+    `} */
 
   > label {
     display: flex;
@@ -52,14 +49,10 @@ export const Container = styled.div<IContainerProps>`
       background: transparent;
       flex: 1;
       border: 0;
-      color: #f4ede8 !important;
+      color: #f4ede8;
 
       icon {
         color: red;
-      }
-
-      svg {
-        color: red !important;
       }
 
       ${props =>

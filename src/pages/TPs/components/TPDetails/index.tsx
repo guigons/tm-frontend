@@ -286,7 +286,7 @@ const TPDetails: React.FC<ITPDetailsProps> = ({ id }) => {
 
             <ul>
               {TP?.historicos.map(historico => (
-                <li>
+                <li key={historico.id}>
                   <div className="Line3">
                     <DisplayField label="Data">
                       {historico?.data &&
@@ -295,7 +295,7 @@ const TPDetails: React.FC<ITPDetailsProps> = ({ id }) => {
                     <DisplayField label="Usuário">
                       {historico?.usuario.nome}
                     </DisplayField>
-                    <DisplayField label="Categoria">
+                    <DisplayField label="Texto">
                       {historico?.texto}
                     </DisplayField>
                   </div>

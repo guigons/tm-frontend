@@ -9,6 +9,7 @@ export const Container = styled.span`
   border-radius: 25px;
   padding: 16px;
   height: 24px;
+  cursor: default;
   svg {
     margin-left: 16px;
     cursor: pointer;

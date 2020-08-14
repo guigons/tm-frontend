@@ -72,10 +72,10 @@ const TPsSummary: React.FC<IProps> = ({
               <thead>
                 <tr>
                   <th style={{ width: '5%' }}>TP</th>
-                  <th style={{ width: '12%' }}>DATA PREVISTA</th>
-                  <th style={{ width: '33%' }}>CRIADOR</th>
-                  <th style={{ width: '35%' }}>PROJETO</th>
-                  <th style={{ width: '15%' }}>LOCALIDADE</th>
+                  <th style={{ width: '15%' }}>DATA PREVISTA</th>
+                  <th style={{ width: '25%' }}>CRIADOR</th>
+                  <th style={{ width: '30%' }}>PROJETO</th>
+                  <th style={{ width: '25%' }}>LOCALIDADE</th>
                 </tr>
               </thead>
               <tbody>

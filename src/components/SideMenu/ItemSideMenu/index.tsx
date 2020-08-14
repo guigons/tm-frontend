@@ -7,10 +7,16 @@ interface IItemMenuProps {
   route: string;
 }
 
-const ItemSideMenu: React.FC<IItemMenuProps> = ({ route, ...rest }) => {
+const ItemSideMenu: React.FC<IItemMenuProps> = ({
+  route,
+  children,
+  ...rest
+}) => {
   const location = useLocation();
   return (
-    <Container to={route} selected={location.pathname === route} {...rest} />
+    <Container to={route} selected={location.pathname === route} {...rest}>
+      {children}
+    </Container>
   );
 };
 

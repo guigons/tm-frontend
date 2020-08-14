@@ -15,16 +15,37 @@ export const Header = styled.div`
   min-height: 80px;
   padding: 0px 8px;
 
-  > h1 {
-    font-size: 16px;
-    padding: 16px 0px;
+  > div.BarLeft {
+    display: flex;
+    align-items: center;
+    h1 {
+      font-size: 16px;
+      padding: 16px 0px;
+    }
   }
 
-  > div.Icons > button {
-    border: 0px;
-    background-color: inherit;
-    color: inherit;
-    margin-left: 16px;
+  > div.BarRight {
+    display: flex;
+    button {
+      border: 0px;
+      background-color: inherit;
+      color: inherit;
+      margin-left: 16px;
+    }
+    span.Chip:nth-child(1) {
+      background-color: var(--color-box);
+      color: var(--color-primary);
+      font-size: 12px;
+      font-weight: 400;
+      margin-left: 16px;
+    }
+    span.Chip:nth-child(2) {
+      background-color: var(--color-box);
+      color: var(--color-secondary);
+      font-size: 12px;
+      font-weight: 400;
+      margin-left: 16px;
+    }
   }
 `;
 
@@ -91,6 +112,7 @@ export const FilaHeader = styled.ul`
       height: 24px;
       position: relative;
       margin-left: 15px;
+      letter-spacing: 0.8px;
     }
   }
 
@@ -112,6 +134,15 @@ export const Filas = styled.ul`
     margin-top: 36px;
     color: grey;
     font-weight: 300;
+    font-size: 16px;
+
+    button {
+      background: transparent;
+      border: 0px;
+      color: var(--color-primary);
+      font-size: 16px;
+      font-weight: 400;
+    }
   }
 `;
 

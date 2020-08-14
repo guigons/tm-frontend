@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { shade } from 'polished';
 
 export const Container = styled.div`
   display: flex;
@@ -7,9 +8,6 @@ export const Container = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  /* box-shadow: 0 1px 1px rgba(255, 255, 255, 0.25) !important;
-    position: relative;
-    z-index: 1;*/
 `;
 
 export const Logo = styled.div`
@@ -49,5 +47,36 @@ export const UserMenu = styled.div`
     border: 1px solid #fff;
     border-radius: 50%;
     cursor: pointer;
+  }
+`;
+
+export const OptionsContainer = styled.div`
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 10px 16px;
+    background-color: var(--color-box);
+    border: 0px;
+    border-radius: 4px;
+    cursor: pointer;
+
+    h1 {
+      text-align: left;
+      font-size: 15px;
+      font-weight: 400;
+      letter-spacing: 0px;
+      color: var(--color-text);
+      width: 120px;
+    }
+
+    svg {
+      color: var(--color-text);
+      margin: 8px 24px 8px 8px;
+    }
+
+    &:hover {
+      background-color: ${shade(0.2, '#312e38')};
+    }
   }
 `;

@@ -1,8 +1,10 @@
 import React from 'react';
-import { FiBox, FiUser } from 'react-icons/fi';
+import { FiBox, FiUser, FiLogOut } from 'react-icons/fi';
 
-import { Container, Logo, UserMenu } from './styles';
+import { MdSettings } from 'react-icons/md';
+import { Container, Logo, UserMenu, OptionsContainer } from './styles';
 import { useAuth } from '../../hooks/auth';
+import SuspensePainel from '../SuspensePainel';
 
 const Header: React.FC = () => {
   const { signOut } = useAuth();
@@ -21,7 +23,14 @@ const Header: React.FC = () => {
       </Logo>
       <UserMenu>
         {user?.name}
-        <FiUser size={24} onClick={signOut} />
+        <SuspensePainel icon={FiUser}>
+          <OptionsContainer>
+            <button type="button" onClick={signOut}>
+              <FiLogOut size={20} />
+              <h1>Sair</h1>
+            </button>
+          </OptionsContainer>
+        </SuspensePainel>
       </UserMenu>
     </Container>
   );

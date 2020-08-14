@@ -59,6 +59,10 @@ export const AnimationContainer = styled.div`
         color: ${shade(0.2, '#f4ede8')};
       }
     }
+
+    div.Input {
+      margin-bottom: 8px;
+    }
   }
 `;
 
