@@ -14,6 +14,10 @@ interface IContentOptionsProps {
   showDisplay: boolean;
 }
 
+interface IOptionsProps {
+  clean?: boolean;
+}
+
 export const Container = styled.div<IContainerProps>`
   background: #232129;
   border-radius: 10px;
@@ -116,7 +120,7 @@ export const Error = styled(Tooltip)`
   }
 `;
 
-export const Options = styled.div`
+export const Options = styled.div<IOptionsProps>`
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -128,9 +132,13 @@ export const Options = styled.div`
   max-height: 200px;
   overflow-y: auto;
   border-radius: 0px 0px 10px 10px;
-  border-left: 2px solid #19b2ff;
-  border-right: 2px solid #19b2ff;
-  border-bottom: 2px solid #19b2ff;
+  ${props =>
+    !props.clean &&
+    css`
+      border-left: 2px solid #19b2ff;
+      border-right: 2px solid #19b2ff;
+      border-bottom: 2px solid #19b2ff;
+    `}
 `;
 
 export const Backdrop = styled.div`

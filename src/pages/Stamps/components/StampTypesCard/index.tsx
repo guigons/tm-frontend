@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import { MdDelete, MdEdit, MdMoreVert } from 'react-icons/md';
 import { Container, OptionsContainerStampTypes, Categories } from './styles';
-import { IStampType } from '../..';
+import { IStampType, StampContext } from '../..';
 import SuspensePainel from '../../../../components/SuspensePainel';
 import StampTypeCategoryCard from '../StampTypeCategoryCard';
 
@@ -11,6 +11,10 @@ interface IStampTypesCardProps {
 }
 
 const StampTypesCard: React.FC<IStampTypesCardProps> = ({ stampType }) => {
+  const { handleEditStampType, handleRemoveStampType } = useContext(
+    StampContext,
+  );
+
   return (
     <Container
       title={stampType.name}
@@ -23,7 +27,7 @@ const StampTypesCard: React.FC<IStampTypesCardProps> = ({ stampType }) => {
               <button
                 type="button"
                 onClick={() => {
-                  // handleEditModule(templateModule);
+                  handleEditStampType(stampType);
                 }}
               >
                 <MdEdit size={24} />
@@ -32,7 +36,7 @@ const StampTypesCard: React.FC<IStampTypesCardProps> = ({ stampType }) => {
               <button
                 type="button"
                 onClick={() => {
-                  // handleRemoveModule(templateModule.id);
+                  handleRemoveStampType(stampType.id);
                 }}
               >
                 <MdDelete size={24} />

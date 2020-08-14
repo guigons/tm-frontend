@@ -28,6 +28,7 @@ interface ISelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   onChange?(value: any): void;
   value?: any;
   disabled?: boolean;
+  clean?: boolean;
 }
 
 interface IOption {
@@ -55,6 +56,7 @@ const Select: React.FC<ISelectProps> = ({
   value: Value,
   disabled,
   onChange,
+  clean,
   ...rest
 }) => {
   const selectRef = useRef<HTMLSelectElement>(null);
@@ -160,7 +162,9 @@ const Select: React.FC<ISelectProps> = ({
               setShowOptions(false);
             }}
           />
-          <Options className="ContentOptions">{children}</Options>
+          <Options className="ContentOptions" clean={clean}>
+            {children}
+          </Options>
         </ContentOptions>
         {error && (
           <Error title={error}>

@@ -14,6 +14,7 @@ export const Header = styled.div`
   padding: 0px 8px;
   > h1 {
     font-size: 20px;
+    font-weight: 400;
     padding: 16px 0px;
   }
 `;

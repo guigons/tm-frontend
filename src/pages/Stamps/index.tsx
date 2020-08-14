@@ -47,6 +47,8 @@ interface IStampContextData {
   setStampCategorySelected: Dispatch<
     SetStateAction<IStampCategory | undefined>
   >;
+  handleRemoveStampType(id: string): void;
+  handleEditStampType(stampType: IStampType): void;
 }
 
 export const StampContext = createContext<IStampContextData>(
@@ -82,7 +84,6 @@ const Stamps: React.FC = () => {
           Object.assign(newStampType, { id: uuid(), categories: [] });
           mutate([...stampTypes, newStampType], false);
           api.post('/stampTypes', newStampType);
-          setStampTypeSelected(newStampType);
         } else {
           mutate(
             stampTypes.map(st => {
@@ -96,6 +97,7 @@ const Stamps: React.FC = () => {
             }),
             false,
           );
+          api.patch(`/stampTypes/${newStampType.id}`, newStampType);
         }
       }
 
@@ -110,6 +112,23 @@ const Stamps: React.FC = () => {
 
   const handleSubmitStamp = useCallback(newStamp => {
     console.log(newStamp);
+  }, []);
+
+  const handleRemoveStampType = useCallback(
+    id => {
+      mutate(
+        stampTypes?.filter(st => st.id.toString() !== id.toString()),
+        false,
+      );
+      api.delete(`/stampTypes/${id}`);
+    },
+    [mutate, stampTypes],
+  );
+
+  const handleEditStampType = useCallback((stampType: IStampType) => {
+    setNewStateModalStampType(false);
+    setStampTypeSelected(stampType);
+    modalStampType.current?.open();
   }, []);
 
   if (!stampTypes) {
@@ -128,6 +147,8 @@ const Stamps: React.FC = () => {
         setStampTypeSelected,
         stampCategorySelected,
         setStampCategorySelected,
+        handleRemoveStampType,
+        handleEditStampType,
       }}
     >
       <Container>

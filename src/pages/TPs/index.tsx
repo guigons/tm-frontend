@@ -178,6 +178,7 @@ const TPs: React.FC = () => {
                   className="SelectPeriod"
                   value={period}
                   onChange={value => setPeriod(value)}
+                  clean
                 >
                   <Option value="1" label="Último dia">
                     Último dia

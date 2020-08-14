@@ -17,7 +17,7 @@ export const Header = styled.div`
   padding: 0px 8px;
 
   div.Select {
-    width: 140px;
+    width: 160px;
     font-size: 12px;
     background-color: var(--color-box);
     /* padding: 5px 16px; */
