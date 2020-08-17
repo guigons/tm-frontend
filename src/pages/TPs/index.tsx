@@ -1,6 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { FiFilter, FiRefreshCcw } from 'react-icons/fi';
-import { IoMdArrowDropdown, IoMdTime } from 'react-icons/io';
 import { format } from 'date-fns';
 import { Form } from '@unform/web';
 import {
@@ -11,7 +10,6 @@ import {
   Filas,
   Fila,
   Card,
-  OptionsContainer,
 } from './styles';
 import Badge from '../../components/Badge';
 import Chip from '../../components/Chip';
@@ -103,13 +101,13 @@ interface IResponseSigitmGrupos {
 const TPs: React.FC = () => {
   const [summaryIds, setSummaryIds] = useState<number[]>();
   const [summaryTitle, setSummaryTitle] = useState<string>();
-  const [period, setPeriod] = useState('1');
+  const [period, setPeriod] = useState('0');
   const modalMinhasFilas = useRef<IModalHandles>();
   const modalTPsSummary = useRef<IModalHandles>();
 
   const { data: TPGroups, error, isValidating, revalidate } = useFetch<
     IResponseSigitmGrupos
-  >(`/tps/group?daysBefore=${period}`, {
+  >(`/tps/group?daysBefore=${period}&daysAfter=1`, {
     refreshInterval: 60000 * 5,
     revalidateOnFocus: true,
     errorRetryCount: 0,
@@ -180,7 +178,7 @@ const TPs: React.FC = () => {
                   onChange={value => setPeriod(value)}
                   clean
                 >
-                  <Option value="1" label="Último dia">
+                  <Option value="0" label="Último dia">
                     Último dia
                   </Option>
                   <Option value="7" label="Últimos 7 dias">
