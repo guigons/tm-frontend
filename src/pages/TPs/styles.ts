@@ -17,10 +17,10 @@ export const Header = styled.div`
   padding: 0px 8px;
 
   div.Select {
-    width: 160px;
+    width: 140px;
     font-size: 12px;
     background-color: var(--color-box);
-    /* padding: 5px 16px; */
+    padding: 0px 0px;
     border-radius: 25px;
     border: 0px;
     label {
@@ -85,7 +85,7 @@ export const Header = styled.div`
       margin-left: 16px;
       cursor: pointer;
       padding: 0px;
-      width: 150px;
+      /* width: 150px; */
 
       h1 {
         color: var(--color-secondary);
@@ -113,7 +113,7 @@ export const Card = styled.div`
   display: flex;
   flex-direction: column;
   background-color: #312e38;
-  flex: 1;
+  min-width: 152.5px;
   padding: 16px;
   border-radius: 5px;
   cursor: pointer;
@@ -319,5 +319,36 @@ export const OptionsContainer = styled.div`
     &:hover {
       background-color: ${shade(0.2, '#312e38')};
     }
+  }
+`;
+
+export const BeforeActivity = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 120px;
+
+  > div.Cards {
+    display: flex;
+    min-height: 120px;
+  }
+
+  > div.Bracket {
+    margin: 6px 0px;
+  }
+`;
+
+export const AfterActivity = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 120px;
+  margin-left: 30px;
+
+  > div.Cards {
+    display: flex;
+    min-height: 120px;
+  }
+
+  > div.Bracket {
+    margin: 6px 0px;
   }
 `;

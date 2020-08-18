@@ -5,11 +5,13 @@ import { Form } from '@unform/web';
 import {
   Container,
   Header,
-  Cards,
   FilaHeader,
   Filas,
   Fila,
+  Cards,
   Card,
+  BeforeActivity,
+  AfterActivity,
 } from './styles';
 import Badge from '../../components/Badge';
 import Chip from '../../components/Chip';
@@ -22,9 +24,23 @@ import TPsSummary from './components/TPsSummary';
 import { useFetch } from '../../hooks/fetch';
 import Select from '../../components/Select';
 import Option from '../../components/Select/Option';
+import Bracket from '../../components/Bracket';
 
 export interface ITPGroupItem {
-  time: string;
+  status:
+    | 'Aprovação'
+    | 'Autorizado'
+    | 'Em Execução'
+    | 'Fora do Prazo'
+    | 'Pré-baixa'
+    | 'Cancelado'
+    | 'Fechado'
+    | 'Não Executado';
+  count: number;
+  ids: number[];
+}
+
+interface ICounter {
   count: number;
   ids: number[];
 }
@@ -32,69 +48,48 @@ export interface ITPGroupItem {
 export interface ITPGroup {
   grupoResponsavel: string;
   data: ITPGroupItem[] | [];
-  total: number;
-  aprovacao: number;
-  autorizados: number;
-  emExecucao: number;
-  foraDoPrazo: number;
-  preBaixa: number;
-  cancelados: number;
-  devolvidos: {
-    count: number;
-    ids: number[];
-  };
-  flexibilizados: number;
-  naoExecutados: number;
-  fechados: {
-    executados: number;
-    cancelados: number;
-    rollback: number;
-    parcial: number;
-    naoExecutado: number;
-    incidencia: number;
-    total: number;
+  total: ICounter;
+  aprovacao: ICounter;
+  autorizados: ICounter;
+  emExecucao: ICounter;
+  foraDoPrazo: ICounter;
+  preBaixa: ICounter;
+  cancelados: ICounter;
+  devolvidos: ICounter;
+  flexibilizados: ICounter;
+  naoExecutados: ICounter;
+  posJanela: {
+    executados: ICounter;
+    cancelados: ICounter;
+    rollback: ICounter;
+    parcial: ICounter;
+    naoExecutado: ICounter;
+    incidencia: ICounter;
+    total: ICounter;
   };
 }
 
 interface IResponseSigitmGrupos {
   groups: ITPGroup[];
-  total: number;
-  aprovacao: number;
-  autorizados: number;
-  emExecucao: number;
-  foraDoPrazo: number;
-  preBaixa: number;
-  cancelados: number;
-  devolvidos: {
-    count: number;
-    ids: number[];
-  };
-  flexibilizados: {
-    count: number;
-    ids: [];
-  };
-  naoExecutados: number;
-  fechados: {
-    executados: {
-      count: number;
-      ids: [];
-    };
-    cancelados: number;
-    rollback: {
-      count: number;
-      ids: [];
-    };
-    parcial: {
-      count: number;
-      ids: [];
-    };
-    naoExecutado: number;
-    incidencia: {
-      count: number;
-      ids: [];
-    };
-    naoClassificado: number;
-    total: number;
+  total: ICounter;
+  aprovacao: ICounter;
+  autorizados: ICounter;
+  emExecucao: ICounter;
+  foraDoPrazo: ICounter;
+  preBaixa: ICounter;
+  cancelados: ICounter;
+  devolvidos: ICounter;
+  flexibilizados: ICounter;
+  naoExecutados: ICounter;
+  posJanela: {
+    executados: ICounter;
+    cancelados: ICounter;
+    rollback: ICounter;
+    parcial: ICounter;
+    naoExecutado: ICounter;
+    incidencia: ICounter;
+    naoClassificado: ICounter;
+    total: ICounter;
   };
 }
 
@@ -178,8 +173,8 @@ const TPs: React.FC = () => {
                   onChange={value => setPeriod(value)}
                   clean
                 >
-                  <Option value="0" label="Último dia">
-                    Último dia
+                  <Option value="0" label="Hoje">
+                    Hoje
                   </Option>
                   <Option value="7" label="Últimos 7 dias">
                     Últimos 7 dias
@@ -202,202 +197,214 @@ const TPs: React.FC = () => {
             </button>
           </div>
         </Header>
+
         <Cards>
-          <Card
-            onClick={() =>
-              handleOpenSummary(
-                'Devolvidos',
-                TPGroups ? TPGroups.devolvidos.ids : [],
-              )
-            }
-          >
-            {!TPGroups ? (
-              <Spinner />
-            ) : (
-              <>
-                <div>
-                  <span>Devolvidas</span>
-                </div>
-                <div>
-                  <strong>
-                    {TPGroups.devolvidos?.count}
-                    {TPGroups.total ? (
-                      <span>
-                        {TPGroups.total === 0
-                          ? 0
-                          : (
-                              (TPGroups.devolvidos?.count * 100) /
-                              TPGroups.total
-                            ).toFixed(0)}
-                        %
-                      </span>
-                    ) : null}
-                  </strong>
-                </div>
-              </>
-            )}
-          </Card>
-          <Card
-            onClick={() =>
-              handleOpenSummary(
-                'Flexibilizados',
-                TPGroups ? TPGroups.flexibilizados.ids : [],
-              )
-            }
-          >
-            {!TPGroups ? (
-              <Spinner />
-            ) : (
-              <>
-                <div>
-                  <span>Flexibilizadas</span>
-                </div>
-                <div>
-                  <strong>
-                    {TPGroups.flexibilizados?.count}
-                    <span>
-                      {TPGroups.total === 0
-                        ? 0
-                        : (
-                            (TPGroups.flexibilizados?.count * 100) /
-                            TPGroups.total
-                          ).toFixed(0)}
-                      %
-                    </span>
-                  </strong>
-                </div>
-              </>
-            )}
-          </Card>
-          <Card
-            onClick={() =>
-              handleOpenSummary(
-                'Executadas',
-                TPGroups ? TPGroups.fechados.executados.ids : [],
-              )
-            }
-          >
-            {!TPGroups ? (
-              <Spinner />
-            ) : (
-              <>
-                <div>
-                  <span>Executadas</span>
-                </div>
-                <div>
-                  <strong>
-                    {TPGroups.fechados?.executados.count}
-                    <span>
-                      {TPGroups.fechados.total === 0
-                        ? 0
-                        : (
-                            (TPGroups.fechados?.executados.count * 100) /
-                            TPGroups.fechados.total
-                          ).toFixed(0)}
-                      %
-                    </span>
-                  </strong>
-                </div>
-              </>
-            )}
-          </Card>
-          <Card
-            onClick={() =>
-              handleOpenSummary(
-                'Fechamentos Parciais',
-                TPGroups ? TPGroups.fechados.parcial.ids : [],
-              )
-            }
-          >
-            {!TPGroups ? (
-              <Spinner />
-            ) : (
-              <>
-                <div>
-                  <span>Parcial</span>
-                </div>
-                <div>
-                  <strong>
-                    {TPGroups.fechados?.parcial.count}
-                    <span>
-                      {TPGroups.fechados.total === 0
-                        ? 0
-                        : (
-                            (TPGroups.fechados?.parcial.count * 100) /
-                            TPGroups.fechados.total
-                          ).toFixed(0)}
-                      %
-                    </span>
-                  </strong>
-                </div>
-              </>
-            )}
-          </Card>
-          <Card
-            onClick={() =>
-              handleOpenSummary(
-                'Fechamentos Com Rollback',
-                TPGroups ? TPGroups.fechados.rollback.ids : [],
-              )
-            }
-          >
-            {!TPGroups ? (
-              <Spinner />
-            ) : (
-              <>
-                <div>
-                  <span>Rollbacks</span>
-                </div>
-                <div>
-                  <strong>
-                    {TPGroups.fechados?.rollback.count}
-                    <span>
-                      {TPGroups.fechados.total === 0
-                        ? 0
-                        : (
-                            (TPGroups.fechados?.rollback.count * 100) /
-                            TPGroups.fechados.total
-                          ).toFixed(0)}
-                      %
-                    </span>
-                  </strong>
-                </div>
-              </>
-            )}
-          </Card>
-          <Card
-            onClick={() =>
-              handleOpenSummary(
-                'Fechamentos com Incidências',
-                TPGroups ? TPGroups.fechados.incidencia.ids : [],
-              )
-            }
-          >
-            {!TPGroups ? (
-              <Spinner />
-            ) : (
-              <>
-                <div>
-                  <span>Incidências</span>
-                </div>
-                <div>
-                  <strong>
-                    {TPGroups.fechados?.incidencia.count}
-                    <span>
-                      {TPGroups.fechados.total === 0
-                        ? 0
-                        : (
-                            (TPGroups.fechados?.incidencia.count * 100) /
-                            TPGroups.fechados.total
-                          ).toFixed(0)}
-                      %
-                    </span>
-                  </strong>
-                </div>
-              </>
-            )}
-          </Card>
+          <BeforeActivity>
+            <Bracket title="Ciclo de Vida" />
+            <div className="Cards">
+              <Card
+                onClick={() =>
+                  handleOpenSummary(
+                    'Devolvidos',
+                    TPGroups ? TPGroups.devolvidos.ids : [],
+                  )
+                }
+              >
+                {!TPGroups ? (
+                  <Spinner />
+                ) : (
+                  <>
+                    <div>
+                      <span>Devolvidas</span>
+                    </div>
+                    <div>
+                      <strong>
+                        {TPGroups.devolvidos?.count}
+                        {TPGroups.total ? (
+                          <span>
+                            {TPGroups.total.count === 0
+                              ? 0
+                              : (
+                                  (TPGroups.devolvidos?.count * 100) /
+                                  TPGroups.total.count
+                                ).toFixed(0)}
+                            %
+                          </span>
+                        ) : null}
+                      </strong>
+                    </div>
+                  </>
+                )}
+              </Card>
+              <Card
+                onClick={() =>
+                  handleOpenSummary(
+                    'Flexibilizados',
+                    TPGroups ? TPGroups.flexibilizados.ids : [],
+                  )
+                }
+              >
+                {!TPGroups ? (
+                  <Spinner />
+                ) : (
+                  <>
+                    <div>
+                      <span>Flexibilizadas</span>
+                    </div>
+                    <div>
+                      <strong>
+                        {TPGroups.flexibilizados?.count}
+                        <span>
+                          {TPGroups.total.count === 0
+                            ? 0
+                            : (
+                                (TPGroups.flexibilizados?.count * 100) /
+                                TPGroups.total.count
+                              ).toFixed(0)}
+                          %
+                        </span>
+                      </strong>
+                    </div>
+                  </>
+                )}
+              </Card>
+            </div>
+          </BeforeActivity>
+          <AfterActivity>
+            <Bracket title="Pós-Atividade" />
+            <div className="Cards">
+              <Card
+                onClick={() =>
+                  handleOpenSummary(
+                    'Executadas',
+                    TPGroups ? TPGroups.posJanela.executados.ids : [],
+                  )
+                }
+              >
+                {!TPGroups ? (
+                  <Spinner />
+                ) : (
+                  <>
+                    <div>
+                      <span>Executadas</span>
+                    </div>
+                    <div>
+                      <strong>
+                        {TPGroups.posJanela?.executados.count}
+                        <span>
+                          {TPGroups.posJanela.total.count === 0
+                            ? 0
+                            : (
+                                (TPGroups.posJanela?.executados.count * 100) /
+                                TPGroups.posJanela.total.count
+                              ).toFixed(0)}
+                          %
+                        </span>
+                      </strong>
+                    </div>
+                  </>
+                )}
+              </Card>
+              <Card
+                onClick={() =>
+                  handleOpenSummary(
+                    'Fechamentos Parciais',
+                    TPGroups ? TPGroups.posJanela.parcial.ids : [],
+                  )
+                }
+              >
+                {!TPGroups ? (
+                  <Spinner />
+                ) : (
+                  <>
+                    <div>
+                      <span>Parcial</span>
+                    </div>
+                    <div>
+                      <strong>
+                        {TPGroups.posJanela?.parcial.count}
+                        <span>
+                          {TPGroups.posJanela.total.count === 0
+                            ? 0
+                            : (
+                                (TPGroups.posJanela?.parcial.count * 100) /
+                                TPGroups.posJanela.total.count
+                              ).toFixed(0)}
+                          %
+                        </span>
+                      </strong>
+                    </div>
+                  </>
+                )}
+              </Card>
+              <Card
+                onClick={() =>
+                  handleOpenSummary(
+                    'Fechamentos Com Rollback',
+                    TPGroups ? TPGroups.posJanela.rollback.ids : [],
+                  )
+                }
+              >
+                {!TPGroups ? (
+                  <Spinner />
+                ) : (
+                  <>
+                    <div>
+                      <span>Rollbacks</span>
+                    </div>
+                    <div>
+                      <strong>
+                        {TPGroups.posJanela?.rollback.count}
+                        <span>
+                          {TPGroups.posJanela.total.count === 0
+                            ? 0
+                            : (
+                                (TPGroups.posJanela?.rollback.count * 100) /
+                                TPGroups.posJanela.total.count
+                              ).toFixed(0)}
+                          %
+                        </span>
+                      </strong>
+                    </div>
+                  </>
+                )}
+              </Card>
+              <Card
+                onClick={() =>
+                  handleOpenSummary(
+                    'Fechamentos com Incidências',
+                    TPGroups ? TPGroups.posJanela.incidencia.ids : [],
+                  )
+                }
+              >
+                {!TPGroups ? (
+                  <Spinner />
+                ) : (
+                  <>
+                    <div>
+                      <span>Incidências</span>
+                    </div>
+                    <div>
+                      <strong>
+                        {TPGroups.posJanela?.incidencia.count}
+                        <span>
+                          {TPGroups.posJanela.total.count === 0
+                            ? 0
+                            : (
+                                (TPGroups.posJanela?.incidencia.count * 100) /
+                                TPGroups.posJanela.total.count
+                              ).toFixed(0)}
+                          %
+                        </span>
+                      </strong>
+                    </div>
+                  </>
+                )}
+              </Card>
+            </div>
+          </AfterActivity>
         </Cards>
+
         <FilaHeader>
           <p />
           <ul>
@@ -485,7 +492,7 @@ const TPs: React.FC = () => {
                     </li>
                   </ul>
                   <span>
-                    <Badge value={TPG.total} />
+                    <Badge value={TPG.total.count} />
                   </span>
                 </Fila>
               ))

@@ -23,6 +23,27 @@ interface ITPSummary {
   };
   localidade: string;
   projeto: string;
+  status: {
+    id: number;
+    nome: string;
+  };
+  baixa: {
+    id: number;
+    tp_id: number;
+    data: Date;
+    descricao: string;
+    incidencia: string;
+    rollback: string;
+    prazo: string;
+    impacto: string;
+    carimbo: {
+      codigo: string;
+      data: Date;
+      tipo: string;
+      categoria: string;
+      descrição: string;
+    };
+  };
 }
 
 const TPsSummary: React.FC<IProps> = ({
@@ -72,10 +93,15 @@ const TPsSummary: React.FC<IProps> = ({
               <thead>
                 <tr>
                   <th style={{ width: '5%' }}>TP</th>
-                  <th style={{ width: '15%' }}>DATA PREVISTA</th>
-                  <th style={{ width: '25%' }}>CRIADOR</th>
+                  <th style={{ width: '12%' }}>DATA PREVISTA</th>
+                  <th style={{ width: '20%' }}>CRIADOR</th>
                   <th style={{ width: '30%' }}>PROJETO</th>
-                  <th style={{ width: '25%' }}>LOCALIDADE</th>
+                  <th style={{ width: '15%' }}>LOCALIDADE</th>
+                  {title === 'Em Aprovação' ? (
+                    <th style={{ width: '17%' }}>STATUS</th>
+                  ) : (
+                    <th style={{ width: '17%' }}>CARIMBO BAIXA</th>
+                  )}
                 </tr>
               </thead>
               <tbody>
@@ -88,6 +114,11 @@ const TPsSummary: React.FC<IProps> = ({
                     <td>{tp.criador.nome}</td>
                     <td>{tp.projeto}</td>
                     <td>{tp.localidade}</td>
+                    {title === 'Em Aprovação' ? (
+                      <td>{tp.status.nome}</td>
+                    ) : (
+                      <td>{tp.baixa?.carimbo?.categoria}</td>
+                    )}
                   </tr>
                 ))}
               </tbody>

@@ -264,7 +264,7 @@ const TPDetails: React.FC<ITPDetailsProps> = ({ id }) => {
 
             <ul>
               {TP?.carimbos.map(carimbo => (
-                <li>
+                <li key={carimbo.codigo}>
                   <div className="Line3">
                     <DisplayField label="Data">
                       {carimbo?.data &&
