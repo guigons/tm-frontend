@@ -26,62 +26,189 @@ import Select from '../../components/Select';
 import Option from '../../components/Select/Option';
 import Bracket from '../../components/Bracket';
 
-export interface ITPGroupItem {
-  status:
-    | 'Aprovação'
-    | 'Autorizado'
-    | 'Em Execução'
-    | 'Fora do Prazo'
-    | 'Pré-baixa'
-    | 'Cancelado'
-    | 'Fechado'
-    | 'Não Executado';
-  count: number;
-  ids: number[];
+export interface ITP {
+  id: number;
+  raiz: number;
+  localidade: string;
+  areaNome: string;
+  gerencia: string;
+  escritorio: string;
+  projeto: string;
+  descricao: string;
+  executorResponsavel: string;
+  executorTelefone: string;
+  executorAreaEmpresa: string;
+  dataCriacao: string;
+  dataInicioPrevisto: string;
+  dataFimPrevisto: string;
+  dataInicioPrevistoAfetacao: string;
+  dataFimPrevistoAfetacao: string;
+  dataInicioExecutada: string;
+  dataFimExecutada: string;
+  dataInicioExecutadaAfetacao: string;
+  dataFimExecutadaAfetacao: string;
+  dataRollback: string;
+  dataEncerramento: string;
+  ocorrencia: string;
+  conclusao: string;
+  justificativa: string;
+  status: {
+    id: number;
+    nome: string;
+  };
+  impacto: {
+    id: number;
+    nome: string;
+  };
+  atividade: {
+    id: number;
+    nome: string;
+  };
+  rede: {
+    id: number;
+    nome: string;
+    tipo: {
+      id: number;
+      nome: string;
+    };
+  };
+  tipoPlanta: {
+    id: number;
+    nome: string;
+  };
+  tipoTrabalho: {
+    id: number;
+    nome: string;
+  };
+  empresa: {
+    id: number;
+    nome: string;
+  };
+  tipoAfetacao: {
+    id: number;
+    nome: string;
+  };
+  motivo: {
+    id: number;
+    nome: string;
+  };
+  criador: {
+    id: number;
+    nome: string;
+    status: number;
+  };
+  criadorGrupo: {
+    id: number;
+    nome: string;
+    status: number;
+  };
+  responsavel: null;
+  fila: {
+    id: number;
+    nome: string;
+    status: number;
+  };
+  encerrador: {
+    id: number;
+    nome: string;
+    status: number;
+  };
+  encerradorGrupo: {
+    id: number;
+    nome: string;
+    status: number;
+  };
+  dadosIP: null;
+  baixa: {
+    id: number;
+    tp_id: number;
+    data: string;
+    descricao: string;
+    incidencia: string;
+    rollback: string;
+    prazo: string;
+    impacto: string;
+    carimbo: {
+      codigo: string;
+      data: string;
+      tipo: string;
+      categoria: string;
+      descrição: string;
+    };
+  };
+  ciente: {
+    id: number;
+    tp_id: number;
+    data: string;
+    usuario: {
+      id: number;
+      nome: string;
+      status: number;
+    };
+    grupo: {
+      id: number;
+      nome: string;
+      status: number;
+    };
+  };
+  historicos: [
+    {
+      id: number;
+      ta_id: number;
+      data: string;
+      texto: string;
+      usuario_id: number;
+      grupo_id: number;
+      usuario: {
+        id: number;
+        nome: string;
+        status: number;
+      };
+      grupo: {
+        id: number;
+        nome: string;
+        status: number;
+      };
+    },
+  ];
+  carimbos: [
+    {
+      codigo: string;
+      data: string;
+      tipo: string;
+      categoria: string;
+      descrição: string;
+    },
+  ];
+  equipamentos: {
+    id: string;
+    hostname: string;
+    fabricante: string;
+    modelo: string;
+  }[];
 }
 
 interface ICounter {
-  count: number;
+  numberOfProjects: number;
   ids: number[];
 }
 
-export interface ITPGroup {
-  grupoResponsavel: string;
-  data: ITPGroupItem[] | [];
+interface ITPCounter {
   total: ICounter;
+  pendentePermissao: ICounter;
+  pendenteOM: ICounter;
   aprovacao: ICounter;
   autorizados: ICounter;
   emExecucao: ICounter;
   foraDoPrazo: ICounter;
   preBaixa: ICounter;
   cancelados: ICounter;
+  fechados: ICounter;
+  naoExecutados: ICounter;
   devolvidos: ICounter;
   flexibilizados: ICounter;
-  naoExecutados: ICounter;
   posJanela: {
-    executados: ICounter;
-    cancelados: ICounter;
-    rollback: ICounter;
-    parcial: ICounter;
-    naoExecutado: ICounter;
-    incidencia: ICounter;
     total: ICounter;
-  };
-}
-
-interface IResponseSigitmGrupos {
-  groups: ITPGroup[];
-  total: ICounter;
-  aprovacao: ICounter;
-  autorizados: ICounter;
-  emExecucao: ICounter;
-  foraDoPrazo: ICounter;
-  preBaixa: ICounter;
-  cancelados: ICounter;
-  devolvidos: ICounter;
-  flexibilizados: ICounter;
-  naoExecutados: ICounter;
-  posJanela: {
     executados: ICounter;
     cancelados: ICounter;
     rollback: ICounter;
@@ -89,8 +216,17 @@ interface IResponseSigitmGrupos {
     naoExecutado: ICounter;
     incidencia: ICounter;
     naoClassificado: ICounter;
-    total: ICounter;
   };
+}
+
+interface ITPGroup {
+  grupoResponsavel: string;
+  counters: ITPCounter;
+}
+
+interface IResponseSigitmGrupos {
+  groups: ITPGroup[];
+  counters: ITPCounter;
 }
 
 const TPs: React.FC = () => {
@@ -206,7 +342,7 @@ const TPs: React.FC = () => {
                 onClick={() =>
                   handleOpenSummary(
                     'Devolvidos',
-                    TPGroups ? TPGroups.devolvidos.ids : [],
+                    TPGroups ? TPGroups.counters.devolvidos.ids : [],
                   )
                 }
               >
@@ -219,14 +355,16 @@ const TPs: React.FC = () => {
                     </div>
                     <div>
                       <strong>
-                        {TPGroups.devolvidos?.count}
-                        {TPGroups.total ? (
+                        {TPGroups.counters.devolvidos?.numberOfProjects}
+                        {TPGroups.counters.total ? (
                           <span>
-                            {TPGroups.total.count === 0
+                            {TPGroups.counters.total.numberOfProjects === 0
                               ? 0
                               : (
-                                  (TPGroups.devolvidos?.count * 100) /
-                                  TPGroups.total.count
+                                  (TPGroups.counters.devolvidos
+                                    ?.numberOfProjects *
+                                    100) /
+                                  TPGroups.counters.total.numberOfProjects
                                 ).toFixed(0)}
                             %
                           </span>
@@ -240,7 +378,7 @@ const TPs: React.FC = () => {
                 onClick={() =>
                   handleOpenSummary(
                     'Flexibilizados',
-                    TPGroups ? TPGroups.flexibilizados.ids : [],
+                    TPGroups ? TPGroups.counters.flexibilizados.ids : [],
                   )
                 }
               >
@@ -253,13 +391,15 @@ const TPs: React.FC = () => {
                     </div>
                     <div>
                       <strong>
-                        {TPGroups.flexibilizados?.count}
+                        {TPGroups.counters.flexibilizados?.numberOfProjects}
                         <span>
-                          {TPGroups.total.count === 0
+                          {TPGroups.counters.total.numberOfProjects === 0
                             ? 0
                             : (
-                                (TPGroups.flexibilizados?.count * 100) /
-                                TPGroups.total.count
+                                (TPGroups.counters.flexibilizados
+                                  ?.numberOfProjects *
+                                  100) /
+                                TPGroups.counters.total.numberOfProjects
                               ).toFixed(0)}
                           %
                         </span>
@@ -271,13 +411,13 @@ const TPs: React.FC = () => {
             </div>
           </BeforeActivity>
           <AfterActivity>
-            <Bracket title="Pós-Atividade" />
+            <Bracket title="Baixas" />
             <div className="Cards">
               <Card
                 onClick={() =>
                   handleOpenSummary(
                     'Executadas',
-                    TPGroups ? TPGroups.posJanela.executados.ids : [],
+                    TPGroups ? TPGroups.counters.posJanela?.executados.ids : [],
                   )
                 }
               >
@@ -286,17 +426,24 @@ const TPs: React.FC = () => {
                 ) : (
                   <>
                     <div>
-                      <span>Executadas</span>
+                      <span>Sucesso</span>
                     </div>
                     <div>
                       <strong>
-                        {TPGroups.posJanela?.executados.count}
+                        {
+                          TPGroups.counters.posJanela?.executados
+                            .numberOfProjects
+                        }
                         <span>
-                          {TPGroups.posJanela.total.count === 0
+                          {TPGroups.counters.posJanela.total
+                            .numberOfProjects === 0
                             ? 0
                             : (
-                                (TPGroups.posJanela?.executados.count * 100) /
-                                TPGroups.posJanela.total.count
+                                (TPGroups.counters.posJanela?.executados
+                                  .numberOfProjects *
+                                  100) /
+                                TPGroups.counters.posJanela.total
+                                  .numberOfProjects
                               ).toFixed(0)}
                           %
                         </span>
@@ -309,7 +456,7 @@ const TPs: React.FC = () => {
                 onClick={() =>
                   handleOpenSummary(
                     'Fechamentos Parciais',
-                    TPGroups ? TPGroups.posJanela.parcial.ids : [],
+                    TPGroups ? TPGroups.counters.posJanela.parcial.ids : [],
                   )
                 }
               >
@@ -322,13 +469,17 @@ const TPs: React.FC = () => {
                     </div>
                     <div>
                       <strong>
-                        {TPGroups.posJanela?.parcial.count}
+                        {TPGroups.counters.posJanela?.parcial.numberOfProjects}
                         <span>
-                          {TPGroups.posJanela.total.count === 0
+                          {TPGroups.counters.posJanela.total
+                            .numberOfProjects === 0
                             ? 0
                             : (
-                                (TPGroups.posJanela?.parcial.count * 100) /
-                                TPGroups.posJanela.total.count
+                                (TPGroups.counters.posJanela?.parcial
+                                  .numberOfProjects *
+                                  100) /
+                                TPGroups.counters.posJanela.total
+                                  .numberOfProjects
                               ).toFixed(0)}
                           %
                         </span>
@@ -341,7 +492,7 @@ const TPs: React.FC = () => {
                 onClick={() =>
                   handleOpenSummary(
                     'Fechamentos Com Rollback',
-                    TPGroups ? TPGroups.posJanela.rollback.ids : [],
+                    TPGroups ? TPGroups.counters.posJanela.rollback.ids : [],
                   )
                 }
               >
@@ -354,13 +505,56 @@ const TPs: React.FC = () => {
                     </div>
                     <div>
                       <strong>
-                        {TPGroups.posJanela?.rollback.count}
+                        {TPGroups.counters.posJanela?.rollback.numberOfProjects}
                         <span>
-                          {TPGroups.posJanela.total.count === 0
+                          {TPGroups.counters.posJanela.total
+                            .numberOfProjects === 0
                             ? 0
                             : (
-                                (TPGroups.posJanela?.rollback.count * 100) /
-                                TPGroups.posJanela.total.count
+                                (TPGroups.counters.posJanela?.rollback
+                                  .numberOfProjects *
+                                  100) /
+                                TPGroups.counters.posJanela.total
+                                  .numberOfProjects
+                              ).toFixed(0)}
+                          %
+                        </span>
+                      </strong>
+                    </div>
+                  </>
+                )}
+              </Card>
+              <Card
+                onClick={() =>
+                  handleOpenSummary(
+                    'Fechamentos com Cancelamento',
+                    TPGroups ? TPGroups.counters.posJanela.cancelados.ids : [],
+                  )
+                }
+              >
+                {!TPGroups ? (
+                  <Spinner />
+                ) : (
+                  <>
+                    <div>
+                      <span>Cancelados</span>
+                    </div>
+                    <div>
+                      <strong>
+                        {
+                          TPGroups.counters.posJanela.cancelados
+                            .numberOfProjects
+                        }
+                        <span>
+                          {TPGroups.counters.posJanela.total
+                            .numberOfProjects === 0
+                            ? 0
+                            : (
+                                (TPGroups.counters.posJanela.cancelados
+                                  .numberOfProjects *
+                                  100) /
+                                TPGroups.counters.posJanela.total
+                                  .numberOfProjects
                               ).toFixed(0)}
                           %
                         </span>
@@ -373,7 +567,7 @@ const TPs: React.FC = () => {
                 onClick={() =>
                   handleOpenSummary(
                     'Fechamentos com Incidências',
-                    TPGroups ? TPGroups.posJanela.incidencia.ids : [],
+                    TPGroups ? TPGroups.counters.posJanela.incidencia.ids : [],
                   )
                 }
               >
@@ -386,13 +580,20 @@ const TPs: React.FC = () => {
                     </div>
                     <div>
                       <strong>
-                        {TPGroups.posJanela?.incidencia.count}
+                        {
+                          TPGroups.counters.posJanela.incidencia
+                            .numberOfProjects
+                        }
                         <span>
-                          {TPGroups.posJanela.total.count === 0
+                          {TPGroups.counters.posJanela.total
+                            .numberOfProjects === 0
                             ? 0
                             : (
-                                (TPGroups.posJanela?.incidencia.count * 100) /
-                                TPGroups.posJanela.total.count
+                                (TPGroups.counters.posJanela.incidencia
+                                  .numberOfProjects *
+                                  100) /
+                                TPGroups.counters.posJanela.total
+                                  .numberOfProjects
                               ).toFixed(0)}
                           %
                         </span>
@@ -408,7 +609,9 @@ const TPs: React.FC = () => {
         <FilaHeader>
           <p />
           <ul>
-            <li>Em Aprovação</li>
+            <li>Criado</li>
+            <li>O&M</li>
+            <li>GMUD</li>
             <li>Autorizado</li>
             <li>Em Execução</li>
             <li>Fora do Prazo</li>
@@ -428,71 +631,122 @@ const TPs: React.FC = () => {
                   <ul>
                     <li>
                       <Badge
-                        value={TPG.data[0].count}
+                        value={TPG.counters.pendentePermissao.numberOfProjects}
                         onClick={() =>
-                          handleOpenSummary('Em Aprovação', TPG.data[0].ids)
+                          handleOpenSummary(
+                            'Pendente Permissão',
+                            TPG.counters.pendentePermissao.ids,
+                          )
                         }
                       />
                     </li>
                     <li>
                       <Badge
-                        value={TPG.data[1].count}
+                        value={TPG.counters.pendenteOM.numberOfProjects}
                         onClick={() =>
-                          handleOpenSummary('Autorizado', TPG.data[1].ids)
+                          handleOpenSummary(
+                            'Pendente O&M',
+                            TPG.counters.pendenteOM.ids,
+                          )
                         }
                       />
                     </li>
                     <li>
                       <Badge
-                        value={TPG.data[2].count}
+                        value={TPG.counters.aprovacao.numberOfProjects}
                         onClick={() =>
-                          handleOpenSummary('Em Execução', TPG.data[2].ids)
+                          handleOpenSummary(
+                            'Pendente GMUD',
+                            TPG.counters.aprovacao.ids,
+                          )
                         }
                       />
                     </li>
                     <li>
                       <Badge
-                        value={TPG.data[3].count}
+                        value={TPG.counters.autorizados.numberOfProjects}
                         onClick={() =>
-                          handleOpenSummary('Fora do Prazo', TPG.data[3].ids)
+                          handleOpenSummary(
+                            'Autorizado',
+                            TPG.counters.autorizados.ids,
+                          )
                         }
                       />
                     </li>
                     <li>
                       <Badge
-                        value={TPG.data[4].count}
+                        value={TPG.counters.emExecucao.numberOfProjects}
                         onClick={() =>
-                          handleOpenSummary('Pré-baixa', TPG.data[4].ids)
+                          handleOpenSummary(
+                            'Em Execução',
+                            TPG.counters.emExecucao.ids,
+                          )
                         }
                       />
                     </li>
                     <li>
                       <Badge
-                        value={TPG.data[5].count}
+                        value={TPG.counters.foraDoPrazo.numberOfProjects}
                         onClick={() =>
-                          handleOpenSummary('Cancelado', TPG.data[5].ids)
+                          handleOpenSummary(
+                            'Fora do Prazo',
+                            TPG.counters.foraDoPrazo.ids,
+                          )
                         }
                       />
                     </li>
                     <li>
                       <Badge
-                        value={TPG.data[6].count}
+                        value={TPG.counters.preBaixa.numberOfProjects}
                         onClick={() =>
-                          handleOpenSummary('Fechado', TPG.data[6].ids)
+                          handleOpenSummary(
+                            'Pré-baixa',
+                            TPG.counters.preBaixa.ids,
+                          )
                         }
                       />
                     </li>
                     <li>
                       <Badge
-                        value={TPG.data[7].count}
+                        value={TPG.counters.cancelados.numberOfProjects}
                         onClick={() =>
-                          handleOpenSummary('Não Executado', TPG.data[7].ids)
+                          handleOpenSummary(
+                            'Cancelado',
+                            TPG.counters.cancelados.ids,
+                          )
+                        }
+                      />
+                    </li>
+                    <li>
+                      <Badge
+                        value={TPG.counters.fechados.numberOfProjects}
+                        onClick={() =>
+                          handleOpenSummary(
+                            'Fechado',
+                            TPG.counters.fechados.ids,
+                          )
+                        }
+                      />
+                    </li>
+                    <li>
+                      <Badge
+                        value={TPG.counters.naoExecutados.numberOfProjects}
+                        onClick={() =>
+                          handleOpenSummary(
+                            'Não Executado',
+                            TPG.counters.naoExecutados.ids,
+                          )
                         }
                       />
                     </li>
                   </ul>
                   <span>
-                    <Badge value={TPG.total.count} />
+                    <Badge
+                      value={TPG.counters.total.numberOfProjects}
+                      onClick={() =>
+                        handleOpenSummary('Total', TPG.counters.total.ids)
+                      }
+                    />
                   </span>
                 </Fila>
               ))

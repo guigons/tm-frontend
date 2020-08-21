@@ -5,7 +5,7 @@ export const Container = styled.div`
   display: flex;
   height: 100%;
   flex-direction: column;
-  width: 1000px;
+  width: 1200px;
   margin: 0 auto;
 `;
 
@@ -113,7 +113,7 @@ export const Card = styled.div`
   display: flex;
   flex-direction: column;
   background-color: #312e38;
-  min-width: 152.5px;
+  min-width: 157.7px;
   padding: 16px;
   border-radius: 5px;
   cursor: pointer;
@@ -285,9 +285,10 @@ export const Fila = styled.li`
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
+    width: 50px;
     height: 24px;
     margin-left: 20px;
+    /* border: 1px solid red; */
   }
 `;
 

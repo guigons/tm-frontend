@@ -41,7 +41,7 @@ const ExpansionPainel: React.FC<IExpansionPainelProps> = ({
         <div className="Label">
           {opened ? (
             <AiFillMinusCircle
-              style={{ color: '#f16262' }}
+              style={{ color: 'grey' }}
               size={20}
               onClick={() => setOpened(false)}
             />

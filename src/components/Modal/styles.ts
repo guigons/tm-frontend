@@ -32,6 +32,8 @@ export const Content = styled.div<IContentProps>`
   background-color: #312e38;
   box-shadow: 0 0 10px rgba(0, 0, 0, 1);
   border-radius: 4px;
+  max-height: 80%;
+  overflow: auto;
 
   ${props => {
     if (props.size === 'sm') {

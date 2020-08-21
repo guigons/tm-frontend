@@ -18,9 +18,16 @@ export const Container = styled.div`
     }
   }
 
-  > div.Table {
-    height: 400px;
-    overflow-y: auto;
+  > h4 {
+    margin-bottom: 16px;
+    color: grey;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: normal;
+    font-size: 12px;
+  }
+
+  div.Table {
     display: flex;
     align-items: flex-start;
     justify-content: center;
