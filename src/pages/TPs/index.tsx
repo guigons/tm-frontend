@@ -312,7 +312,7 @@ const TPs: React.FC = () => {
                   <Option value="0" label="Hoje">
                     Hoje
                   </Option>
-                  <Option value="7" label="Últimos 7 dias">
+                  <Option value="6" label="Últimos 7 dias">
                     Últimos 7 dias
                   </Option>
                 </Select>
@@ -455,7 +455,7 @@ const TPs: React.FC = () => {
               <Card
                 onClick={() =>
                   handleOpenSummary(
-                    'Fechamentos Parciais',
+                    'Baixas Parciais',
                     TPGroups ? TPGroups.counters.posJanela.parcial.ids : [],
                   )
                 }
@@ -491,7 +491,7 @@ const TPs: React.FC = () => {
               <Card
                 onClick={() =>
                   handleOpenSummary(
-                    'Fechamentos Com Rollback',
+                    'Baixas Com Rollback',
                     TPGroups ? TPGroups.counters.posJanela.rollback.ids : [],
                   )
                 }
@@ -527,7 +527,7 @@ const TPs: React.FC = () => {
               <Card
                 onClick={() =>
                   handleOpenSummary(
-                    'Fechamentos com Cancelamento',
+                    'Baixas com Cancelamento',
                     TPGroups ? TPGroups.counters.posJanela.cancelados.ids : [],
                   )
                 }
@@ -566,7 +566,7 @@ const TPs: React.FC = () => {
               <Card
                 onClick={() =>
                   handleOpenSummary(
-                    'Fechamentos com Incidências',
+                    'Baixas com Incidências',
                     TPGroups ? TPGroups.counters.posJanela.incidencia.ids : [],
                   )
                 }

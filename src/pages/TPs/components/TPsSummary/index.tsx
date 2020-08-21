@@ -1,4 +1,12 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-return-assign */
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  useMemo,
+  useRef,
+} from 'react';
 import { format } from 'date-fns';
 
 import { Container } from './styles';
@@ -49,6 +57,14 @@ const TPsSummary: React.FC<IProps> = ({
     modalTPDetails.current?.open();
   }, []);
 
+  const sumOfProjects = useMemo(() => {
+    if (!group) return 0;
+    return Object.entries(group).reduce(
+      (acc, [, valuesP]) => (acc += Object.keys(valuesP).length),
+      0,
+    );
+  }, [group]);
+
   useEffect(() => {
     handleLoadGroup();
   }, [handleLoadGroup]);
@@ -66,20 +82,20 @@ const TPsSummary: React.FC<IProps> = ({
       <Container>
         <header>
           <h1>{title}</h1>
-          <Badge value={Object.entries(group).length} />
+          <Badge value={sumOfProjects} />
         </header>
 
         <h4>Projetos</h4>
 
         {Object.entries(group).map(([project, valueP]) => (
-          <ExpansionPainel key={project} title={project} titleColor="white">
+          <ExpansionPainel
+            key={project}
+            title={project}
+            titleColor="white"
+            preTitle={`${Object.keys(valueP).length}`}
+          >
             {Object.entries(valueP).map(([date, TPs]) => (
-              <ExpansionPainel
-                key={date}
-                title={format(new Date(date), 'dd/MMM')}
-                titleColor="white"
-                clean
-              >
+              <ExpansionPainel key={date} title={date} titleColor="white" clean>
                 <div className="Table">
                   <table>
                     <thead>
