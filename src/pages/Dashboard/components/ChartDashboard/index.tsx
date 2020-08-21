@@ -116,19 +116,6 @@ const ChartDashboard: React.FC<IChartDashboardProps> = ({
     [chartPreference._id, preferences.charts, updateChartsPreference],
   );
 
-  if (!chartData) {
-    return (
-      <Container>
-        <h1>{chartPreference.name}</h1>
-        <span>{handleGroupByLabel()}</span>
-        <div className="Period">
-          <h1>{handlePeriodLabel()}</h1>{' '}
-        </div>
-        <Spinner />
-      </Container>
-    );
-  }
-
   return (
     <>
       <Container>
@@ -136,7 +123,7 @@ const ChartDashboard: React.FC<IChartDashboardProps> = ({
         <span>{handleGroupByLabel()}</span>
         <div className="Period">
           <h1>{handlePeriodLabel()}</h1>{' '}
-          <span>{isValidating && <Spinner size={16} />}</span>
+          {chartData && <span>{isValidating && <Spinner size={16} />}</span>}
         </div>
         <div className="Icons">
           <MdFullscreen size={20} onClick={handleChartFullScreen} />
@@ -149,9 +136,13 @@ const ChartDashboard: React.FC<IChartDashboardProps> = ({
             onClick={() => modalEditChartRef.current?.open()}
           />
         </div>
-        <div className="Chart">
-          <Chart chartData={chartData} animation={animation} />
-        </div>
+        {chartData ? (
+          <div className="Chart">
+            <Chart chartData={chartData} animation={animation} />
+          </div>
+        ) : (
+          <Spinner />
+        )}
       </Container>
       <Modal ref={modalEditChartRef}>
         <FormChartPreference

@@ -63,10 +63,14 @@ const FormChartPreference: React.FC<IFormProps> = ({
         formRef.current?.setErrors({});
         const schema = Yup.object().shape({
           name: Yup.string().required('Nome é obrigatório'),
+          template_id: Yup.string().required('Filtro é obrigatório'),
         });
-        await schema.validate(data, {
-          abortEarly: false,
-        });
+        await schema.validate(
+          { name, template_id },
+          {
+            abortEarly: false,
+          },
+        );
         const newChartPreference: IChartPreference = {
           _id: initialData?._id as string,
           name,

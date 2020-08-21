@@ -114,7 +114,7 @@ const Dashboard: React.FC = () => {
             amount: 7,
             horizontal: 'date',
             period: 'last_days',
-            template_id: 'TPs',
+            template_id: '',
             start: new Date(),
             end: new Date(),
             type: '',
