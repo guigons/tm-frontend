@@ -20,6 +20,11 @@ export const Header = styled.div`
 `;
 
 export const Main = styled.div`
+  > div.SpinnerContent {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
   > div.Stamps {
     padding: 32px;
     background: var(--color-box);

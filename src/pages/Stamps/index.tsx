@@ -136,7 +136,9 @@ const Stamps: React.FC = () => {
       <Container>
         <Header />
         <Main>
-          <Spinner />
+          <div className="SpinnerContent">
+            <Spinner />
+          </div>
         </Main>
       </Container>
     );
