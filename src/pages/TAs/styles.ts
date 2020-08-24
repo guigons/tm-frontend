@@ -153,6 +153,10 @@ export const Filas = styled.ul`
       font-weight: 400;
     }
   }
+
+  div.FilaGroup {
+    margin-bottom: 10px;
+  }
 `;
 
 export const Fila = styled.li<IFilaProps>`

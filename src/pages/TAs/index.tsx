@@ -319,11 +319,8 @@ const TAs: React.FC = () => {
           <Filas>
             {TAGroups.groups.length ? (
               TAGroups.groups.map(TAG => (
-                <>
-                  <Fila
-                    key={TAG.grupoResponsavel}
-                    color={`${stc(TAG.grupoResponsavel)}ff`}
-                  >
+                <div className="FilaGroup">
+                  <Fila color={stc(TAG.grupoResponsavel)}>
                     <p>
                       {TAG.grupoResponsavel}
                       <span>IP</span>
@@ -527,7 +524,7 @@ const TAs: React.FC = () => {
                       <Badge value={TAG.counters.total.numberOfTAsMetro} />
                     </span>
                   </Fila>
-                </>
+                </div>
               ))
             ) : (
               <h3>
