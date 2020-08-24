@@ -134,7 +134,10 @@ const Stamps: React.FC = () => {
   if (!stampTypes) {
     return (
       <Container>
-        <Spinner />
+        <Header />
+        <Main>
+          <Spinner />
+        </Main>
       </Container>
     );
   }

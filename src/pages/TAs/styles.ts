@@ -1,5 +1,9 @@
 import styled from 'styled-components';
 
+interface IFilaProps {
+  color?: string;
+}
+
 export const Container = styled.div`
   display: flex;
   height: 100%;
@@ -63,6 +67,7 @@ export const Card = styled.div`
   flex: 1;
   padding: 16px;
   border-radius: 5px;
+  cursor: pointer;
 
   & + div {
     margin-left: 10px;
@@ -76,6 +81,10 @@ export const Card = styled.div`
   > strong {
     font-size: 24px;
     margin-top: 16px;
+  }
+
+  &:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 1);
   }
 `;
 
@@ -146,7 +155,7 @@ export const Filas = styled.ul`
   }
 `;
 
-export const Fila = styled.li`
+export const Fila = styled.li<IFilaProps>`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -167,17 +176,23 @@ export const Fila = styled.li`
 
   &::before {
     content: '';
-    width: 2px;
+    width: 3px;
     height: 100%;
     position: absolute;
     left: 0;
     top: 0;
-    background-color: #19b2ff;
+    background-color: ${props => props.color || '#19b2ff'};
   }
 
   > p {
     overflow: hidden;
     width: 150px;
+    span {
+      color: grey;
+      margin-left: 8px;
+      font-size: 12px;
+      letter-spacing: 2px;
+    }
   }
 
   > ul {
