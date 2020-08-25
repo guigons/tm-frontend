@@ -42,6 +42,8 @@ export default createGlobalStyle`
     --color-box: #312e38;
     --color-primary: #19b2ff;
     --color-secondary: #f16262;
+    --color-secondary-alert: #961c1c;
+    --color-tertiary: #b17a00e0;
     --color-text: #FFFFFF;
     --color-text-secondary: grey;
   }

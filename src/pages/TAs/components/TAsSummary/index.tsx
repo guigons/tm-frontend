@@ -70,22 +70,37 @@ const TAsSummary: React.FC<IProps> = ({
               <tr>
                 <th style={{ width: '5%' }}>TA</th>
                 <th style={{ width: '12%' }}>DATA CRIAÇÃO</th>
-                {/* <th style={{ width: '15%' }}>BILHETE</th> */}
-                <th style={{ width: '20%' }}>TIPO ALARME</th>
-                <th style={{ width: '20%' }}>REDE</th>
-                <th style={{ width: '18%' }}>LOCALIDADE</th>
+
+                <th style={{ width: '13%' }}>TIPO ALARME</th>
+                <th style={{ width: '10%' }}>REDE</th>
+                <th style={{ width: '15%' }}>LOCALIDADE</th>
+                <th
+                  style={{
+                    width: '20%',
+                    overflow: 'hidden',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  RESPONSAVEL
+                </th>
                 <th style={{ width: '25%' }}>EQUIPAMENTO</th>
               </tr>
             </thead>
             <tbody>
               {TAs.map(ta => (
-                <tr key={ta.id} onClick={() => handleOpenTADetails(ta)}>
+                <tr
+                  key={ta.id}
+                  onClick={() => handleOpenTADetails(ta)}
+                  className={
+                    ta.afetacao.isAfetacaoParcial ? 'isAfetacao' : undefined
+                  }
+                >
                   <td>{ta.id}</td>
                   <td>{format(new Date(ta.dataCriacao), 'dd/MMM/u')}</td>
-                  {/* <td>{ta.tipoBilhete}</td> */}
                   <td>{ta.alarmeTipo}</td>
                   <td>{`${ta.rede.tipo.nome} ${ta.rede.nome}`}</td>
                   <td>{ta.regiao}</td>
+                  <td>{ta.responsavel?.nome}</td>
                   <td>
                     {ta.equipamentos
                       .map(equipamento => equipamento.hostname)

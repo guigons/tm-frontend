@@ -6,10 +6,23 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   loading?: boolean;
   color?: string;
   value: string | number;
+  alert?: boolean;
 };
 
-const Button: React.FC<ButtonProps> = ({ loading, color, value, ...rest }) => (
-  <Container className="Badge" type="button" value={value} {...rest}>
+const Button: React.FC<ButtonProps> = ({
+  loading,
+  color,
+  value,
+  alert,
+  ...rest
+}) => (
+  <Container
+    className="Badge"
+    type="button"
+    value={value}
+    alert={alert}
+    {...rest}
+  >
     {value}
   </Container>
 );

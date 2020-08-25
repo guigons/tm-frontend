@@ -14,7 +14,7 @@ export const Container = styled.div`
     justify-content: space-between;
     width: 100%;
     color: #19b2ff;
-    padding-top: 60px;
+    padding-top: 40px;
 
     button.Badge {
       padding: 8px;

@@ -34,12 +34,12 @@ export interface ITA {
   tipoFalha: string;
   idStatus: number;
   idTipoRede: number;
-  responsavel: {
+  responsavel?: {
     id: number;
     nome: string;
     status: number;
   };
-  fila: {
+  fila?: {
     id: number;
     nome: string;
     status: number;
@@ -90,6 +90,35 @@ export interface ITA {
     fabricante: string;
     modelo: string;
   }[];
+
+  afetacao: {
+    isAfetacaoParcial: boolean;
+    afetacoesParciais: {
+      id: number;
+      data: Date;
+      transmissao: number;
+      voz: number;
+      deterministica: number;
+      speedy: number;
+      cliente: number;
+      cp: number;
+      rede_ip: number;
+      interconexao: number;
+      sppac: number;
+      dth: number;
+      fttx: number;
+      iptv: number;
+      erb: number;
+      grupo: {
+        id: number;
+        nome: string;
+      };
+      usuario: {
+        id: number;
+        nome: string;
+      };
+    }[];
+  };
 }
 
 interface ICounter {
@@ -97,6 +126,8 @@ interface ICounter {
   idsIP: number[];
   numberOfTAsMetro: number;
   idsMetro: number[];
+  hasAfetacaoIP: boolean;
+  hasAfetacaoMetro: boolean;
 }
 
 interface ITACounter {
@@ -225,7 +256,7 @@ const TAs: React.FC = () => {
           <Card
             onClick={() =>
               handleOpenSummary(
-                'Abertos',
+                'Sem Reconhecimento',
                 TAGroups
                   ? [
                       ...TAGroups.counters.abertos.idsIP,
@@ -239,7 +270,7 @@ const TAs: React.FC = () => {
               <Spinner />
             ) : (
               <>
-                <span>Abertos</span>
+                <span>Sem Reconhecimento</span>
                 <strong>
                   {TAGroups.counters.abertos.numberOfTAsIP +
                     TAGroups.counters.abertos.numberOfTAsMetro}
@@ -319,7 +350,7 @@ const TAs: React.FC = () => {
           <Filas>
             {TAGroups.groups.length ? (
               TAGroups.groups.map(TAG => (
-                <div className="FilaGroup">
+                <div key={TAG.grupoResponsavel} className="FilaGroup">
                   <Fila color={stc(TAG.grupoResponsavel)}>
                     <p>
                       {TAG.grupoResponsavel}
@@ -329,6 +360,7 @@ const TAs: React.FC = () => {
                       <li>
                         <Badge
                           value={TAG.counters.t0h.numberOfTAsIP}
+                          alert={TAG.counters.t0h.hasAfetacaoIP}
                           onClick={() =>
                             handleOpenSummary('+0h', TAG.counters.t0h.idsIP)
                           }
@@ -337,6 +369,7 @@ const TAs: React.FC = () => {
                       <li>
                         <Badge
                           value={TAG.counters.t12h.numberOfTAsIP}
+                          alert={TAG.counters.t12h.hasAfetacaoIP}
                           onClick={() =>
                             handleOpenSummary('+12h', TAG.counters.t12h.idsIP)
                           }
@@ -345,6 +378,7 @@ const TAs: React.FC = () => {
                       <li>
                         <Badge
                           value={TAG.counters.t1d.numberOfTAsIP}
+                          alert={TAG.counters.t12h.hasAfetacaoIP}
                           onClick={() =>
                             handleOpenSummary('+1d', TAG.counters.t1d.idsIP)
                           }
@@ -353,6 +387,7 @@ const TAs: React.FC = () => {
                       <li>
                         <Badge
                           value={TAG.counters.t3d.numberOfTAsIP}
+                          alert={TAG.counters.t3d.hasAfetacaoIP}
                           onClick={() =>
                             handleOpenSummary('+3d', TAG.counters.t3d.idsIP)
                           }
@@ -361,6 +396,7 @@ const TAs: React.FC = () => {
                       <li>
                         <Badge
                           value={TAG.counters.t7d.numberOfTAsIP}
+                          alert={TAG.counters.t7d.hasAfetacaoIP}
                           onClick={() =>
                             handleOpenSummary('+7d', TAG.counters.t7d.idsIP)
                           }
@@ -369,6 +405,7 @@ const TAs: React.FC = () => {
                       <li>
                         <Badge
                           value={TAG.counters.t15d.numberOfTAsIP}
+                          alert={TAG.counters.t15d.hasAfetacaoIP}
                           onClick={() =>
                             handleOpenSummary('+15d', TAG.counters.t15d.idsIP)
                           }
@@ -377,6 +414,7 @@ const TAs: React.FC = () => {
                       <li>
                         <Badge
                           value={TAG.counters.t30d.numberOfTAsIP}
+                          alert={TAG.counters.t30d.hasAfetacaoIP}
                           onClick={() =>
                             handleOpenSummary('+30d', TAG.counters.t30d.idsIP)
                           }
@@ -385,6 +423,7 @@ const TAs: React.FC = () => {
                       <li>
                         <Badge
                           value={TAG.counters.t60d.numberOfTAsIP}
+                          alert={TAG.counters.t60d.hasAfetacaoIP}
                           onClick={() =>
                             handleOpenSummary('+60d', TAG.counters.t60d.idsIP)
                           }
@@ -393,6 +432,7 @@ const TAs: React.FC = () => {
                       <li>
                         <Badge
                           value={TAG.counters.t120d.numberOfTAsIP}
+                          alert={TAG.counters.t120d.hasAfetacaoIP}
                           onClick={() =>
                             handleOpenSummary('+120d', TAG.counters.t120d.idsIP)
                           }
@@ -401,6 +441,7 @@ const TAs: React.FC = () => {
                       <li>
                         <Badge
                           value={TAG.counters.t365d.numberOfTAsIP}
+                          alert={TAG.counters.t365d.hasAfetacaoIP}
                           onClick={() =>
                             handleOpenSummary('+365d', TAG.counters.t365d.idsIP)
                           }
@@ -410,6 +451,7 @@ const TAs: React.FC = () => {
                     <span>
                       <Badge
                         value={TAG.counters.total.numberOfTAsIP}
+                        alert={TAG.counters.total.hasAfetacaoIP}
                         onClick={() =>
                           handleOpenSummary('Total', TAG.counters.total.idsIP)
                         }
@@ -424,6 +466,7 @@ const TAs: React.FC = () => {
                       <li>
                         <Badge
                           value={TAG.counters.t0h.numberOfTAsMetro}
+                          alert={TAG.counters.t0h.hasAfetacaoMetro}
                           onClick={() =>
                             handleOpenSummary('+0h', TAG.counters.t0h.idsMetro)
                           }
@@ -432,6 +475,7 @@ const TAs: React.FC = () => {
                       <li>
                         <Badge
                           value={TAG.counters.t12h.numberOfTAsMetro}
+                          alert={TAG.counters.t12h.hasAfetacaoMetro}
                           onClick={() =>
                             handleOpenSummary(
                               '+12h',
@@ -443,6 +487,7 @@ const TAs: React.FC = () => {
                       <li>
                         <Badge
                           value={TAG.counters.t1d.numberOfTAsMetro}
+                          alert={TAG.counters.t1d.hasAfetacaoMetro}
                           onClick={() =>
                             handleOpenSummary('+1d', TAG.counters.t1d.idsMetro)
                           }
@@ -451,6 +496,7 @@ const TAs: React.FC = () => {
                       <li>
                         <Badge
                           value={TAG.counters.t3d.numberOfTAsMetro}
+                          alert={TAG.counters.t3d.hasAfetacaoMetro}
                           onClick={() =>
                             handleOpenSummary('+3d', TAG.counters.t3d.idsMetro)
                           }
@@ -459,6 +505,7 @@ const TAs: React.FC = () => {
                       <li>
                         <Badge
                           value={TAG.counters.t7d.numberOfTAsMetro}
+                          alert={TAG.counters.t7d.hasAfetacaoMetro}
                           onClick={() =>
                             handleOpenSummary('+7d', TAG.counters.t7d.idsMetro)
                           }
@@ -467,6 +514,7 @@ const TAs: React.FC = () => {
                       <li>
                         <Badge
                           value={TAG.counters.t15d.numberOfTAsMetro}
+                          alert={TAG.counters.t15d.hasAfetacaoMetro}
                           onClick={() =>
                             handleOpenSummary(
                               '+15d',
@@ -478,6 +526,7 @@ const TAs: React.FC = () => {
                       <li>
                         <Badge
                           value={TAG.counters.t30d.numberOfTAsMetro}
+                          alert={TAG.counters.t30d.hasAfetacaoMetro}
                           onClick={() =>
                             handleOpenSummary(
                               '+30d',
@@ -489,6 +538,7 @@ const TAs: React.FC = () => {
                       <li>
                         <Badge
                           value={TAG.counters.t60d.numberOfTAsMetro}
+                          alert={TAG.counters.t60d.hasAfetacaoMetro}
                           onClick={() =>
                             handleOpenSummary(
                               '+60d',
@@ -500,6 +550,7 @@ const TAs: React.FC = () => {
                       <li>
                         <Badge
                           value={TAG.counters.t120d.numberOfTAsMetro}
+                          alert={TAG.counters.t120d.hasAfetacaoMetro}
                           onClick={() =>
                             handleOpenSummary(
                               '+120d',
@@ -511,6 +562,7 @@ const TAs: React.FC = () => {
                       <li>
                         <Badge
                           value={TAG.counters.t365d.numberOfTAsMetro}
+                          alert={TAG.counters.t365d.hasAfetacaoMetro}
                           onClick={() =>
                             handleOpenSummary(
                               '+365d',
@@ -521,7 +573,10 @@ const TAs: React.FC = () => {
                       </li>
                     </ul>
                     <span>
-                      <Badge value={TAG.counters.total.numberOfTAsMetro} />
+                      <Badge
+                        value={TAG.counters.total.numberOfTAsMetro}
+                        alert={TAG.counters.total.hasAfetacaoMetro}
+                      />
                     </span>
                   </Fila>
                 </div>

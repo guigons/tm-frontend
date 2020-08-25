@@ -56,6 +56,10 @@ export const Container = styled.div`
         border-bottom-right-radius: 4px;
       }
 
+      tbody tr.isAfetacao {
+        background: #f3303024;
+      }
+
       tr {
         height: 42px;
 

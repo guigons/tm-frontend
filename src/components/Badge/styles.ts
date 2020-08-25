@@ -2,6 +2,7 @@ import styled, { css } from 'styled-components';
 
 interface IContainerProps {
   value: string | number;
+  alert?: boolean;
 }
 
 export const Container = styled.button<IContainerProps>`
@@ -13,7 +14,6 @@ export const Container = styled.button<IContainerProps>`
   background-color: #8080802e;
   border-radius: 50px;
   font-size: 14px;
-  color: #fff;
   cursor: pointer;
   border: 0px;
   font-weight: 300;
@@ -22,6 +22,14 @@ export const Container = styled.button<IContainerProps>`
     !!props.value &&
     css`
       background-color: var(--color-secondary);
+      color: white;
+      font-weight: 500;
+    `};
+
+  ${props =>
+    !!props.alert &&
+    css`
+      background-color: var(--color-secondary-alert);
       color: white;
       font-weight: 500;
     `};
