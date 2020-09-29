@@ -2,24 +2,20 @@ import React, { useContext } from 'react';
 
 import { MdEdit, MdDelete } from 'react-icons/md';
 import { Container } from './styles';
-import { IStampType, IStampCategory, IStamp } from '../..';
-
-// import { TemplateContext } from '..';
+import { IStampType, IStampCategory, IStamp, StampContext } from '../..';
 
 interface IStampCardProps {
   stampType: IStampType;
-  stampTypeCategory: IStampCategory;
+  stampCategory: IStampCategory;
   stamp: IStamp;
 }
 
 const StampCard: React.FC<IStampCardProps> = ({
   stampType,
-  stampTypeCategory,
+  stampCategory,
   stamp,
 }) => {
-  // const { handleEditQuestion, handleRemoveQuestion } = useContext(
-  //   TemplateContext,
-  // );
+  const { handleEditStamp, handleRemoveStamp } = useContext(StampContext);
 
   return (
     <Container>
@@ -32,21 +28,13 @@ const StampCard: React.FC<IStampCardProps> = ({
           <MdEdit
             size={22}
             onClick={() => {
-              // handleEditQuestion(
-              //   templateModule,
-              //   templateCategory,
-              //   templateQuestion,
-              // );
+              handleEditStamp(stamp);
             }}
           />
           <MdDelete
             size={22}
             onClick={() => {
-              // handleRemoveQuestion(
-              //   templateModule.id,
-              //   templateCategory.id,
-              //   templateQuestion.id,
-              // );
+              handleRemoveStamp(stamp.type_id, stamp.category_id, stamp.id);
             }}
           />
         </div>

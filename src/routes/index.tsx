@@ -8,6 +8,7 @@ import Dashboard from '../pages/Dashboard';
 import ForgotPassword from '../pages/ForgotPassword';
 import ResetPassword from '../pages/ResetPassword';
 import { PreferencesProvider } from '../hooks/preferences';
+import StampsList from '../pages/StampsList';
 
 const Routes: React.FC = () => {
   return (
@@ -15,6 +16,7 @@ const Routes: React.FC = () => {
       <Route path="/" exact component={SignIn} />
       <Route path="/forgot-password" component={ForgotPassword} />
       <Route path="/reset-password" component={ResetPassword} />
+      <Route path="/stamps" exact component={StampsList} />
       <PreferencesProvider>
         <Route path="/home" component={Home} isPrivate />
         <Route path="/dashboard" component={Dashboard} isPrivate />

@@ -16,7 +16,7 @@ interface IFormProps {
   initialData?: IStamp;
   onSubmit(data: IStamp): void;
   onClickNewStampType(): void;
-  onClickNewStampTypeCategory(): void;
+  onClickNewStampCategory(): void;
   onCancel?(): void;
 }
 
@@ -30,7 +30,7 @@ interface IFormNewData {
 const FormNewStamp: React.FC<IFormProps> = ({
   initialData,
   onClickNewStampType,
-  onClickNewStampTypeCategory,
+  onClickNewStampCategory,
   onSubmit,
 }) => {
   const formRef = useRef<FormHandles>(null);
@@ -124,7 +124,7 @@ const FormNewStamp: React.FC<IFormProps> = ({
           </button>
         </div>
         <div className="New">
-          <button type="button" onClick={onClickNewStampTypeCategory}>
+          <button type="button" onClick={onClickNewStampCategory}>
             + Nova categoria
           </button>
         </div>

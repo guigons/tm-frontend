@@ -7,30 +7,26 @@ import React, {
 } from 'react';
 import { IconBaseProps } from 'react-icons';
 import { FiAlertCircle } from 'react-icons/fi';
-import { useField } from '@unform/core';
 
-import { Container, Error } from './styles';
+import { Container } from './styles';
 
-interface IInputProps extends InputHTMLAttributes<HTMLInputElement> {
+interface IInputOnlyProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   name: string;
   focused?: boolean;
   icon?: React.ComponentType<IconBaseProps>;
-  minWidthLabel?: string;
 }
 
-const Input: React.FC<IInputProps> = ({
+const InputOnly: React.FC<IInputOnlyProps> = ({
   name,
   label,
   icon: Icon,
   focused,
-  minWidthLabel,
   ...rest
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isFocused, setIsFocused] = useState(focused || false);
   const [isFilled, setisFilled] = useState(false);
-  const { fieldName, defaultValue, error, registerField } = useField(name);
 
   const handleInputFocus = useCallback(() => {
     setIsFocused(true);
@@ -41,43 +37,26 @@ const Input: React.FC<IInputProps> = ({
     setisFilled(!!inputRef.current?.value);
   }, []);
 
-  useEffect(() => {
-    registerField({
-      name: fieldName,
-      ref: inputRef.current,
-      path: 'value',
-    });
-  }, [fieldName, registerField]);
-
   return (
     <Container
-      isErrored={!!error}
+      className="Input"
       isFilled={isFilled}
       isFocused={isFocused}
       label={label}
-      className="Input"
-      minWidthLabel={minWidthLabel}
     >
-      {Icon && <Icon size={20} />}
+      {Icon && <Icon size={18} />}
       <label htmlFor={name}>
-        {label ? <h1>{`${label}:`}</h1> : null}
+        {label ? `${label}:` : null}
         <input
           id={name}
           onFocus={handleInputFocus}
           onBlur={handleInputBlur}
-          defaultValue={defaultValue}
           ref={inputRef}
           {...rest}
         />
       </label>
-
-      {error && (
-        <Error title={error}>
-          <FiAlertCircle color="#c53030" size={20} />
-        </Error>
-      )}
     </Container>
   );
 };
 
-export default Input;
+export default InputOnly;

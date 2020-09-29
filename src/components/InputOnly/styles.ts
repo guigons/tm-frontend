@@ -1,72 +1,51 @@
 import styled, { css } from 'styled-components';
+import { shade } from 'polished';
 import Tooltip from '../Tooltip';
 
 interface IContainerProps {
   isFocused: boolean;
   isFilled: boolean;
-  isErrored: boolean;
   label?: string;
-  minWidthLabel?: string;
 }
 
 export const Container = styled.div<IContainerProps>`
-  background: #232129;
-  border-radius: 10px;
-  padding: 0px 16px;
-  width: 100%;
-  height: 56px;
-
-  border: 2px solid #232120;
-  color: grey;
-  font-weight: 300;
-
   display: flex;
+  width: 100%;
+  height: 42px;
   align-items: center;
+  background: var(--color-box);
+  border-radius: 4px;
+  padding: 10px 15px;
+  border: 1px solid #c5d9e8;
+  color: var(--color-text);
+  font-weight: 400;
 
-
-  ${props =>
-    props.isErrored &&
-    css`
-      border-color: #c53030;
-    `}
+  & + div {
+    margin-top: 10px;
+  }
 
   ${props =>
     props.isFocused &&
     css`
-      color: #19b2ff;
-      border-color: #19b2ff;
+      color: ${shade(0.2, '#A8C6DF')};
+      border-color: ${shade(0.2, '#C5D9E8')};
     `}
 
-  /* ${props =>
+  ${props =>
     props.isFilled &&
     css`
-      color: #19b2ff;
-    `} */
+      color: ${shade(0.2, '#A8C6DF')};
+    `}
 
   > label {
     display: flex;
     flex: 1;
-
-    h1 {
-      font-weight: 300;
-      font-size: 16px;
-      ${props =>
-        props.minWidthLabel &&
-        css`
-          min-width: ${props.minWidthLabel};
-        `}
-
-    }
-
     input {
       background: transparent;
       flex: 1;
       border: 0;
-      color: #f4ede8;
-
-      icon {
-        color: red;
-      }
+      color: var(--color-text);
+      font-size: 15px;
 
       ${props =>
         props.label &&
@@ -75,7 +54,7 @@ export const Container = styled.div<IContainerProps>`
         `}
 
       &::placeholder {
-        color: #666360;
+        color: #a8c6df;
       }
     }
   }

@@ -1,46 +1,59 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useContext } from 'react';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
+import { uuid } from 'uuidv4';
 import { Container, Header, Main, Footer } from './styles';
 import getValidationErrors from '../../../../utils/getValidationErrors';
 import Input from '../../../../components/Input';
 import Button from '../../../../components/Button';
+import Select from '../../../../components/Select';
+import Option from '../../../../components/Select/Option';
+import { IStampCategory, StampContext } from '../..';
 
-interface IModuleFormData {
+interface IFormData {
   name: string;
+  type_id: string;
 }
 
 interface IFormProps {
-  initialData?: IModuleFormData;
-  onSubmit(data: IModuleFormData): void;
+  initialData?: IStampCategory;
+  onSubmit(data: IStampCategory): void;
   onCancel?(): void;
   edit?: boolean;
 }
 
-const FormTypeStamp: React.FC<IFormProps> = ({
+const FormStampCategory: React.FC<IFormProps> = ({
   onSubmit,
   onCancel,
   initialData,
   edit,
 }) => {
   const form = useRef<FormHandles>(null);
+  const { stampTypes } = useContext(StampContext);
 
   const handleSubmit = useCallback(
-    async ({ name }: IModuleFormData) => {
+    async ({ name, type_id }: IFormData) => {
       try {
         form.current?.setErrors({});
         const schema = Yup.object().shape({
+          type_id: Yup.string().required('Tipo é obrigatório'),
           name: Yup.string().required('Nome é obrigatório'),
         });
 
         await schema.validate(
-          { name },
+          { name, type_id },
           {
             abortEarly: false,
           },
         );
 
-        onSubmit({ name });
+        const newStampCategory: IStampCategory = {
+          ...(initialData || { id: uuid(), name: '', stamps: [] }),
+          type_id,
+          name,
+        };
+
+        onSubmit(newStampCategory);
       } catch (err) {
         console.log(err);
         if (err instanceof Yup.ValidationError) {
@@ -49,19 +62,28 @@ const FormTypeStamp: React.FC<IFormProps> = ({
         }
       }
     },
-    [onSubmit],
+    [initialData, onSubmit],
   );
 
   return (
     <Container ref={form} onSubmit={handleSubmit} initialData={initialData}>
-      <Header>{edit ? <h1>Editar Tipo</h1> : <h1>Novo tipo</h1>}</Header>
+      <Header>
+        {edit ? <h1>Editar categoria</h1> : <h1>Nova categoria</h1>}
+      </Header>
       <Main>
-        <Input name="name" type="text" label="Nome do tipo" />
+        <Select name="type_id" label="Nome do tipo" disabled={edit}>
+          {stampTypes.map(m => (
+            <Option key={m.id} label={m.name} value={m.id}>
+              {m.name}
+            </Option>
+          ))}
+        </Select>
+        <Input name="name" type="text" label="Nome da categoria" />
       </Main>
       <Footer>
         <Button
           type="submit"
-          background="#312e38"
+          background="transparent"
           color="grey"
           onClick={onCancel}
         >
@@ -73,4 +95,4 @@ const FormTypeStamp: React.FC<IFormProps> = ({
   );
 };
 
-export default FormTypeStamp;
+export default FormStampCategory;

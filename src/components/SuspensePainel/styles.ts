@@ -18,7 +18,6 @@ export const Backdrop = styled.div`
   left: 0;
   right: 0;
   z-index: 50;
-  background-color: transparent;
 `;
 
 export const Content = styled.div<ISuspensePainelProps>`

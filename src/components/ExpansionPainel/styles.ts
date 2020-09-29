@@ -114,10 +114,11 @@ export const Header = styled.div<IHeaderProps>`
 
 export const Content = styled.div<IContainerProps>`
   padding: 8px;
-  background-color: var(--color-background);
+  /* background-color: var(--color-background); */
   ${props =>
     !props.clean &&
     css`
+      background-color: var(--color-background);
       /* border-top: 1px solid #19b2ff; */
     `}
 `;

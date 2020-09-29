@@ -29,6 +29,7 @@ interface ISelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   value?: any;
   disabled?: boolean;
   clean?: boolean;
+  minWidthLabel?: string;
 }
 
 interface IOption {
@@ -57,6 +58,7 @@ const Select: React.FC<ISelectProps> = ({
   disabled,
   onChange,
   clean,
+  minWidthLabel,
   ...rest
 }) => {
   const selectRef = useRef<HTMLSelectElement>(null);
@@ -139,10 +141,11 @@ const Select: React.FC<ISelectProps> = ({
         onClick={handleClick}
         className="Select"
         disabled={disabled || false}
+        minWidthLabel={minWidthLabel}
       >
         {Icon && <Icon size={20} />}
         <label htmlFor={name}>
-          {TopLabel ? `${TopLabel}:` : null}
+          {TopLabel ? <h1>{`${TopLabel}:`}</h1> : null}
           <span>{getLabel()}</span>
           <select
             id={name}

@@ -8,6 +8,7 @@ interface IContainerProps {
   isErrored: boolean;
   label?: string;
   disabled?: boolean;
+  minWidthLabel?: string;
 }
 
 interface IContentOptionsProps {
@@ -57,7 +58,7 @@ export const Container = styled.div<IContainerProps>`
   ${props =>
     props.disabled &&
     css`
-      background: ${shade(0.03, '#FFF')};
+      background: ${shade(0.3, '#232129')};
     `}
 
   label {
@@ -67,6 +68,17 @@ export const Container = styled.div<IContainerProps>`
     padding: 0px 0px 0px 16px;
     justify-content: center;
     margin-right: 0px;
+
+    h1 {
+      font-weight: 300;
+      font-size: 16px;
+      ${props =>
+        props.minWidthLabel &&
+        css`
+          min-width: ${props.minWidthLabel};
+        `}
+
+    }
 
     span {
       color: #f4ede8;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { IconBaseProps } from 'react-icons';
 import { Container, Content, Backdrop } from './styles';
 
@@ -12,26 +12,26 @@ const SuspensePainel: React.FC<IExpansionPainelProps> = ({
 }) => {
   const [opened, setOpened] = useState(false);
 
+  const handleClickContent = useCallback(event => {
+    event.stopPropagation();
+    setOpened(false);
+  }, []);
+
+  const handleClickBackdrop = useCallback(event => {
+    event.stopPropagation();
+    setOpened(false);
+  }, []);
+
+  const handleClickIcon = useCallback(event => {
+    event.stopPropagation();
+    setOpened(true);
+  }, []);
+
   return (
     <Container>
-      {opened && (
-        <Backdrop
-          onClick={event => {
-            event.stopPropagation();
-            setOpened(false);
-          }}
-        />
-      )}
-      {Icon && (
-        <Icon
-          size={20}
-          onClick={event => {
-            event.stopPropagation();
-            setOpened(true);
-          }}
-        />
-      )}
-      {opened && <Content>{children}</Content>}
+      {opened && <Backdrop onClick={handleClickBackdrop} />}
+      {Icon && <Icon size={24} onClick={handleClickIcon} />}
+      {opened && <Content onClick={handleClickContent}>{children}</Content>}
     </Container>
   );
 };

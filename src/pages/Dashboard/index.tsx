@@ -1,5 +1,6 @@
 import React, { useRef, useCallback, useEffect, useState } from 'react';
-import { FiPlus } from 'react-icons/fi';
+import { FiFilter, FiPlus } from 'react-icons/fi';
+import { useHistory } from 'react-router-dom';
 
 import { subDays } from 'date-fns';
 import {
@@ -14,32 +15,16 @@ import ChartDashboard from './components/ChartDashboard';
 import { usePreferences, IChartPreference } from '../../hooks/preferences';
 import FormChartPreference from './forms/FormChartPreference';
 import api from '../../services/api';
-
-export interface ITemplatesFilterCondition {
-  key: string;
-  value: string;
-}
-
-export interface ITemplatesFilter {
-  conditions: ITemplatesFilterCondition[];
-}
-
-export interface ITemplate {
-  _id: string;
-  name: string;
-  global: boolean;
-  target: string;
-  filters: ITemplatesFilter[];
-  grouping: string[];
-}
+import { ITemplate } from '../Templates';
 
 const Dashboard: React.FC = () => {
   const modalMeusTemplatesRef = useRef<IModalHandles>();
   const modalNewChartRef = useRef<IModalHandles>();
   const { preferences, updateChartsPreference } = usePreferences();
   const [templates, setTemplates] = useState<ITemplate[]>([]);
+  const history = useHistory();
 
-  const handleSubmitAdd = useCallback(
+  const handleSubmitAddChart = useCallback(
     async (newChartPreference: IChartPreference) => {
       const now = new Date();
       updateChartsPreference([
@@ -80,7 +65,10 @@ const Dashboard: React.FC = () => {
             type="button"
             onClick={() => modalMeusTemplatesRef.current?.open()}
           >
-            {/* <FiSettings size={18} /> */}
+            <FiFilter
+              size={18}
+              onClick={() => history.push('/home/templates')}
+            />
           </button>
         </Header>
         <Main>
@@ -102,10 +90,9 @@ const Dashboard: React.FC = () => {
           </ListChartPreferences>
         </Main>
       </Container>
-      <Modal ref={modalMeusTemplatesRef}>Meus Templates</Modal>
       <Modal ref={modalNewChartRef}>
         <FormChartPreference
-          onSubmit={handleSubmitAdd}
+          onSubmit={handleSubmitAddChart}
           templates={templates}
           initialData={{
             _id: '',

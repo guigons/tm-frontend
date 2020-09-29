@@ -4,7 +4,7 @@ import { MdDelete, MdEdit, MdMoreVert } from 'react-icons/md';
 import { Container, OptionsContainerStampTypes, Categories } from './styles';
 import { IStampType, StampContext } from '../..';
 import SuspensePainel from '../../../../components/SuspensePainel';
-import StampTypeCategoryCard from '../StampTypeCategoryCard';
+import StampCategoryCard from '../StampCategoryCard';
 
 interface IStampTypesCardProps {
   stampType: IStampType;
@@ -49,11 +49,11 @@ const StampTypesCard: React.FC<IStampTypesCardProps> = ({ stampType }) => {
     >
       <Categories>
         {!stampType.categories.length && <h3>Nenhum categoria criada</h3>}
-        {stampType?.categories.map(stampTypeCategory => (
-          <StampTypeCategoryCard
-            key={stampTypeCategory.id}
+        {stampType?.categories.map(stampCategory => (
+          <StampCategoryCard
+            key={stampCategory.id}
             stampType={stampType}
-            stampTypeCategory={stampTypeCategory}
+            stampCategory={stampCategory}
           />
         ))}
       </Categories>

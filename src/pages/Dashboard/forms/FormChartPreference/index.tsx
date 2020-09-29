@@ -6,9 +6,9 @@ import Button from '../../../../components/Button';
 import Input from '../../../../components/Input';
 import getValidationErrors from '../../../../utils/getValidationErrors';
 import { IChartPreference } from '../../../../hooks/preferences';
-import { ITemplate } from '../..';
 import Select from '../../../../components/Select';
 import Option from '../../../../components/Select/Option';
+import { ITemplate } from '../../../Templates';
 
 interface IFormProps {
   initialData?: IChartPreference;

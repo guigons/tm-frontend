@@ -1,33 +1,34 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext } from 'react';
 
-import { MdDragHandle, MdMoreVert, MdEdit, MdDelete } from 'react-icons/md';
+import { MdMoreVert, MdEdit, MdDelete } from 'react-icons/md';
+
 import {
   Container,
   OptionsContainerTemplateCategories,
   Stamps,
 } from './styles';
 
-import { IStampType, IStampCategory } from '../..';
+import { IStampType, IStampCategory, StampContext } from '../..';
 import SuspensePainel from '../../../../components/SuspensePainel';
 import StampCard from '../StampCard';
 
-interface IStampTypeCategoryCardProps {
+interface IStampCategoryCardProps {
   stampType: IStampType;
-  stampTypeCategory: IStampCategory;
+  stampCategory: IStampCategory;
 }
 
-const StampTypeCategoryCard: React.FC<IStampTypeCategoryCardProps> = ({
+const StampCategoryCard: React.FC<IStampCategoryCardProps> = ({
   stampType,
-  stampTypeCategory,
+  stampCategory,
 }) => {
-  // const { handleEditCategory, handleRemoveCategory } = useContext(
-  //   TemplateContext,
-  // );
+  const { handleRemoveStampCategory, handleEditStampCategory } = useContext(
+    StampContext,
+  );
 
   return (
     <div>
       <Container
-        title={stampTypeCategory.name}
+        title={stampCategory.name}
         titleColor="#FFF"
         titleFontSize="12px"
         barComponent={() => (
@@ -37,7 +38,7 @@ const StampTypeCategoryCard: React.FC<IStampTypeCategoryCardProps> = ({
                 <button
                   type="button"
                   onClick={() => {
-                    // handleEditCategory(templateModule, templateCategory);
+                    handleEditStampCategory(stampCategory);
                   }}
                 >
                   <MdEdit size={22} />
@@ -46,10 +47,10 @@ const StampTypeCategoryCard: React.FC<IStampTypeCategoryCardProps> = ({
                 <button
                   type="button"
                   onClick={() => {
-                    // handleRemoveCategory(
-                    //   templateModule.id,
-                    //   templateCategory.id,
-                    // );
+                    handleRemoveStampCategory(
+                      stampCategory?.type_id,
+                      stampCategory.id,
+                    );
                   }}
                 >
                   <MdDelete size={22} />
@@ -61,12 +62,12 @@ const StampTypeCategoryCard: React.FC<IStampTypeCategoryCardProps> = ({
         )}
       >
         <Stamps>
-          {!stampTypeCategory?.stamps.length && <h3>Nenhum carimbo criado</h3>}
-          {stampTypeCategory.stamps.map(stamp => (
+          {!stampCategory?.stamps.length && <h3>Nenhum carimbo criado</h3>}
+          {stampCategory.stamps.map(stamp => (
             <StampCard
               key={stamp.id}
               stampType={stampType}
-              stampTypeCategory={stampTypeCategory}
+              stampCategory={stampCategory}
               stamp={stamp}
             />
           ))}
@@ -76,4 +77,4 @@ const StampTypeCategoryCard: React.FC<IStampTypeCategoryCardProps> = ({
   );
 };
 
-export default StampTypeCategoryCard;
+export default StampCategoryCard;

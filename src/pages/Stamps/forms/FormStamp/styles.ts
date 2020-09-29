@@ -17,6 +17,10 @@ export const Main = styled.main`
   > div.Input {
     margin-top: 16px;
   }
+
+  > div.Select {
+    margin-top: 16px;
+  }
 `;
 
 export const Header = styled.header`

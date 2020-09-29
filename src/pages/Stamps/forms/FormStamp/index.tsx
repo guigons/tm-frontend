@@ -1,24 +1,25 @@
 import React, { useRef, useContext, useCallback } from 'react';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
+import { uuid } from 'uuidv4';
 import { Container, Header, Main, Footer } from './styles';
 import getValidationErrors from '../../../../utils/getValidationErrors';
 import Button from '../../../../components/Button';
 import Select from '../../../../components/Select';
 import Option from '../../../../components/Select/Option';
-import TextArea from '../../../../components/TextArea';
-import { StampContext } from '../..';
+import { IStamp, StampContext } from '../..';
+import Input from '../../../../components/Input';
 
-interface IStampFormData {
+interface IFormData {
   cod: string;
   description: string;
-  newStampTypeId: string;
-  newStampTypeCategoryId: string;
+  type_id: string;
+  category_id: string;
 }
 
 interface IFormProps {
-  initialData?: IStampFormData;
-  onSubmit(data: IStampFormData): void;
+  initialData?: IStamp;
+  onSubmit(data: IStamp): void;
   onCancel?(): void;
   edit?: boolean;
 }
@@ -33,26 +34,36 @@ const FormStamp: React.FC<IFormProps> = ({
   const { stampTypes } = useContext(StampContext);
 
   const handleSubmit = useCallback(
-    async ({
-      cod,
-      description,
-      newStampTypeId,
-      newStampTypeCategoryId,
-    }: IStampFormData) => {
+    async ({ cod, description, type_id, category_id }: IFormData) => {
       try {
         form.current?.setErrors({});
         const schema = Yup.object().shape({
           description: Yup.string().required('Pergunta é obrigatório'),
+          cod: Yup.string().required('Código é obrigatório'),
         });
 
         await schema.validate(
-          { description },
+          { description, cod },
           {
             abortEarly: false,
           },
         );
 
-        onSubmit({ cod, description, newStampTypeId, newStampTypeCategoryId });
+        const newStamp: IStamp = {
+          ...(initialData || {
+            id: uuid(),
+            description: '',
+            cod: '',
+            type_id: '',
+            category_id: '',
+          }),
+          type_id,
+          category_id,
+          description,
+          cod,
+        };
+
+        onSubmit(newStamp);
       } catch (err) {
         console.log(err);
         if (err instanceof Yup.ValidationError) {
@@ -61,36 +72,31 @@ const FormStamp: React.FC<IFormProps> = ({
         }
       }
     },
-    [onSubmit],
+    [initialData, onSubmit],
   );
-
-  console.log('ID', initialData);
 
   return (
     <Container ref={form} onSubmit={handleSubmit} initialData={initialData}>
       <Header>{edit ? <h1>Editar carimbo</h1> : <h1>Novo carimbo</h1>}</Header>
       <Main>
-        <Select name="newStampTypeId" label="Nome do tipo" disabled={edit}>
+        <Select name="type_id" label="Nome do tipo" disabled={edit}>
           {stampTypes.map(m => (
             <Option key={m.id} label={m.name} value={m.id}>
               {`${m.name} - ${m.id}`}
             </Option>
           ))}
         </Select>
-        <Select
-          name="newStampTypeCategoryId"
-          label="Nome da categoria"
-          disabled={edit}
-        >
+        <Select name="category_id" label="Nome da categoria" disabled={edit}>
           {stampTypes
-            .find(m => m.id === initialData?.newStampTypeId)
+            .find(m => m.id === initialData?.type_id)
             ?.categories.map(c => (
               <Option key={c.id} label={c.name} value={c.id}>
                 {`${c.name} - ${c.id}`}
               </Option>
             ))}
         </Select>
-        <TextArea name="description" label="Pergunta" rows={3} />
+        <Input name="description" label="Descrição" />
+        <Input name="cod" label="Código" />
       </Main>
       <Footer>
         <Button

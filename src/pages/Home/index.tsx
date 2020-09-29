@@ -12,6 +12,7 @@ import Header from '../../components/Header';
 import SideMenu from '../../components/SideMenu';
 import ItemSideMenu from '../../components/SideMenu/ItemSideMenu';
 import Stamps from '../Stamps';
+import Templates from '../Templates';
 
 const Home: React.FC = () => {
   const match = useRouteMatch();
@@ -35,6 +36,7 @@ const Home: React.FC = () => {
             <Route path={`${match.path}/tas`} component={TAs} />
             <Route path={`${match.path}/tps`} component={TPs} />
             <Route path={`${match.path}/stamps`} component={Stamps} />
+            <Route path={`${match.path}/templates`} component={Templates} />
           </Switch>
         </NavContent>
       </Content>

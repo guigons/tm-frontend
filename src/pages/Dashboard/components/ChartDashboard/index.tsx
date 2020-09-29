@@ -15,7 +15,7 @@ import { useFetch } from '../../../../hooks/fetch';
 import Chart from '../../../../components/Chart';
 import Modal, { IModalHandles } from '../../../../components/Modal';
 import FormChartPreference from '../../forms/FormChartPreference';
-import { ITemplate } from '../..';
+import { ITemplate } from '../../../Templates';
 
 type IChartDashboardProps = {
   chartPreference: IChartPreference;
