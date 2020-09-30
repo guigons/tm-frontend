@@ -378,7 +378,7 @@ const TAs: React.FC = () => {
                       <li>
                         <Badge
                           value={TAG.counters.t1d.numberOfTAsIP}
-                          alert={TAG.counters.t12h.hasAfetacaoIP}
+                          alert={TAG.counters.t1d.hasAfetacaoIP}
                           onClick={() =>
                             handleOpenSummary('+1d', TAG.counters.t1d.idsIP)
                           }
